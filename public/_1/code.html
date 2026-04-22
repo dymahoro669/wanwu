@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>安全验证</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=Noto+Serif+SC:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary": "#6d5b46",
+                        "on-tertiary-fixed-variant": "#004e60",
+                        "surface-container-highest": "#f7ddd5",
+                        "on-primary-container": "#5f1900",
+                        "background": "#fff8f6",
+                        "secondary-fixed": "#f8dec3",
+                        "outline": "#8d7168",
+                        "on-tertiary-container": "#003744",
+                        "inverse-surface": "#3c2d28",
+                        "surface-dim": "#eed5cd",
+                        "tertiary-fixed-dim": "#59d5fb",
+                        "surface-container": "#ffe9e3",
+                        "primary-fixed": "#ffdbd0",
+                        "error": "#ba1a1a",
+                        "secondary-fixed-dim": "#dbc3a8",
+                        "on-tertiary-fixed": "#001f28",
+                        "surface-container-lowest": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "on-surface": "#261814",
+                        "primary-container": "#ff6b35",
+                        "surface-container-low": "#fff1ed",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-fixed": "#261908",
+                        "tertiary": "#00677e",
+                        "primary": "#ab3500",
+                        "inverse-on-surface": "#ffede8",
+                        "tertiary-container": "#00a7cb",
+                        "on-secondary-container": "#74614b",
+                        "error-container": "#ffdad6",
+                        "outline-variant": "#e1bfb5",
+                        "on-primary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "inverse-primary": "#ffb59d",
+                        "tertiary-fixed": "#b5ebff",
+                        "surface-tint": "#ab3500",
+                        "surface-bright": "#fff8f6",
+                        "surface": "#fff8f6",
+                        "on-background": "#261814",
+                        "surface-container-high": "#fde3db",
+                        "on-secondary-fixed-variant": "#544430",
+                        "on-surface-variant": "#594139",
+                        "on-primary-fixed": "#390c00",
+                        "secondary-container": "#f8dec3",
+                        "on-primary-fixed-variant": "#832600",
+                        "surface-variant": "#f7ddd5",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed-dim": "#ffb59d"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "section-gap": "48px",
+                        "gutter": "16px",
+                        "container-padding": "24px",
+                        "unit": "8px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Manrope"],
+                        "display-lg": ["Noto Serif SC"],
+                        "body-lg": ["Manrope"],
+                        "headline-md": ["Noto Serif SC"],
+                        "label-sm": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "display-lg": ["40px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "headline-md": ["28px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "label-sm": ["12px", { "lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.95) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col relative overflow-hidden">
+<!-- Ambient Background Lighting (Updated to match Splash Screen soft cream-white tone) -->
+<div class="absolute inset-0 pointer-events-none z-0">
+<img alt="Background" class="absolute inset-0 w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqVRPyxaQTkKNDKKaFCqRgvoBk6PZU4cSbqozmS7FLaEqTVUTT2ABf9JmUIbYFblVmp9k8H8EzbMTTJH_7MGyYyMJ9_0fbmia9vC1Lw036u5r-ksUEJOP5H_mu3yeSAeURVJSiqv7wxNA7IKT_evcLAOdVP23KQhn3bG4Ow1eKPAYpEbmZaHOFprQlTtGleovr2ODZellj2EzOWsqVPZoN8o7IVVtIoHm35ImEH4kFoWnv5-MkWw-OyS66YIciIWfF4HAU-5PKgMQ"/>
+<div class="absolute inset-0 bg-gradient-to-b from-background/40 via-background/80 to-background backdrop-blur-[2px]"></div>
+</div>
+<!-- TopAppBar -->
+<header class="bg-transparent text-primary font-serif text-lg font-semibold tracking-tight docked full-width top-0 border-none flex items-center justify-between px-6 py-4 w-full relative z-10">
+<button class="hover:opacity-80 transition-opacity active:scale-95 duration-150 p-2 -ml-2 rounded-full text-primary">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="text-on-background text-xl">安全中心</h1>
+<div class="w-8"></div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 px-container-padding pt-section-gap pb-32 flex flex-col items-center relative z-10 w-full max-w-md mx-auto">
+<!-- Branding & Instructions -->
+<div class="text-center mb-12 w-full">
+<div class="font-display-lg text-primary-container mb-6 italic opacity-80">万物</div>
+<h2 class="text-on-surface mb-4 text-4xl font-bold">开启指纹登录</h2>
+<p class="text-on-surface-variant max-w-xs mx-auto text-lg">
+                请通过您的账户密码验证身份，以开启指纹快捷登录。
+            </p>
+</div>
+<!-- Verification Form -->
+<form class="w-full space-y-6">
+<div class="space-y-4">
+<div class="relative">
+<input class="w-full bg-surface-container-lowest/80 backdrop-blur-sm text-on-surface font-body-md rounded-[16px] px-4 py-4 border border-outline-variant focus:border-outline focus:ring-0 transition-colors shadow-sm" id="username" placeholder="用户名 / 邮箱" type="text"/>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline" data-icon="person">person</span>
+</div>
+<div class="relative">
+<input class="w-full bg-surface-container-lowest/80 backdrop-blur-sm text-on-surface font-body-md rounded-[16px] px-4 py-4 border border-outline-variant focus:border-outline focus:ring-0 transition-colors shadow-sm" id="password" placeholder="密码" type="password"/>
+<button class="absolute right-4 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface transition-colors p-1" type="button">
+<span class="material-symbols-outlined" data-icon="visibility">visibility</span>
+</button>
+</div>
+</div>
+<button class="w-full bg-primary-container text-white font-label-sm py-4 rounded-full mt-8 shadow-lg shadow-primary-container/20 hover:opacity-90 active:scale-[0.98] transition-all relative overflow-hidden group" type="button">
+<div class="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<span class="relative z-10 tracking-widest uppercase">验证并开启</span>
+</button>
+</form>
+</main>
+<!-- System Fingerprint Overlay / Modal -->
+<div class="fixed inset-0 z-50 flex items-center justify-center px-4 bg-on-background/40 backdrop-blur-sm">
+<div class="bg-surface-container-lowest w-full max-w-sm rounded-[32px] p-8 flex flex-col items-center text-center shadow-2xl shadow-secondary/20 scale-100 animate-[popIn_0.3s_ease-out]">
+<div class="w-16 h-16 rounded-full bg-surface-container-low flex items-center justify-center mb-6 text-primary-container">
+<span class="material-symbols-outlined text-[32px]" data-icon="fingerprint" data-weight="fill" style="font-variation-settings: 'FILL' 1;">fingerprint</span>
+</div>
+<h3 class="text-on-surface mb-2 font-bold font-display-lg text-2xl">验证指纹</h3>
+<p class="text-on-surface-variant mb-8 text-base">请触摸指纹传感器以继续</p>
+<button class="font-label-sm text-outline hover:text-on-surface transition-colors uppercase tracking-widest px-6 py-2 border border-outline/30 rounded-full px-8 py-3">
+                取消
+            </button>
+</div>
+</div>
+</body></html>
