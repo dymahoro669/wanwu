@@ -1,114 +1,398 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1.0">
-    <meta name="theme-color" content="#fff8f6">
-    <title>万物 - Everything</title>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
-    <style>
-        * { -webkit-tap-highlight-color: transparent; }
-        body { margin: 0; padding: 0; background: #fff8f6; font-family: 'Manrope', sans-serif; }
-        .font-serif { font-family: 'Noto Serif SC', serif; }
-        .material-symbols-outlined {
-            font-family: 'Material Symbols Outlined';
-            font-size: 24px;
-            display: inline-block;
-            -webkit-font-smoothing: antialiased;
-        }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    </style>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport">
+<title>万物启动画面</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Han+Serif+SC:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body { width: 100%; height: 100%; overflow: hidden; }
+    body { position: fixed; inset: 0; background: #000; padding-top: env(safe-area-inset-top); }
+    svg { display: inline-block; vertical-align: middle; }
+    .video-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 0;
+    }
+    .poster-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 2;
+        background: #000;
+    }
+    .white-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.25);
+        z-index: 1;
+        pointer-events: none;
+    }
+    /* 内容层 */
+    .content, .login-page, .fingerprint-page {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .title-group {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .title {
+        font-family: 'Source Han Serif SC', 'Times New Roman', serif;
+        font-size: 64px;
+        font-weight: 700;
+        color: #3D2008;
+        letter-spacing: 0;
+        line-height: 1.3;
+        text-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+    }
+    .subtitle {
+        font-family: 'Times New Roman', serif;
+        font-size: 24px;
+        font-weight: 400;
+        color: rgba(61, 32, 8, 0.85);
+        letter-spacing: 0.08em;
+        margin-top: 16px;
+    }
+    .slogan {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        padding-bottom: calc(48px + env(safe-area-inset-bottom));
+        font-family: 'Source Han Serif SC', serif;
+        font-size: 14px;
+        font-weight: 300;
+        color: rgba(61, 32, 8, 0.7);
+        letter-spacing: 0.1em;
+    }
+    /* 登录页样式 */
+    .login-page { display: none; }
+    .login-header { text-align: center; margin-bottom: 40px; }
+    .login-h2 {
+        font-family: 'Source Han Serif SC', 'Times New Roman', serif;
+        font-size: 21px;
+        font-weight: 400;
+        color: #3D2008;
+        margin-bottom: 4px;
+    }
+    .login-h1 {
+        font-family: 'Source Han Serif SC', 'Times New Roman', serif;
+        font-size: 42px;
+        font-weight: 700;
+        color: #3D2008;
+        letter-spacing: -0.5px;
+    }
+    .login-form {
+        width: 100%;
+        max-width: 320px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+    .input-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+    .input-icon {
+        position: absolute;
+        left: 16px;
+        color: #3D2008;
+        pointer-events: none;
+    }
+    .login-input {
+        width: 100%;
+        padding: 16px 16px 16px 48px;
+        background: rgba(255,255,255,0.9);
+        border: none;
+        border-radius: 12px;
+        font-size: 16px;
+        font-family: 'Manrope', sans-serif;
+        color: #333;
+        outline: none;
+    }
+    .login-input::placeholder { color: #999; }
+    .login-input:focus { box-shadow: 0 0 0 2px #FF6600; }
+    .password-toggle {
+        position: absolute;
+        right: 16px;
+        color: #3D2008;
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+    .login-hint {
+        text-align: center;
+        font-family: 'Source Han Serif SC', serif;
+        font-size: 12px;
+        font-weight: 300;
+        color: #3D2008;
+        margin: 16px 0 24px;
+    }
+    .login-btn {
+        width: 100%;
+        max-width: 320px;
+        padding: 16px;
+        background: #FF6600;
+        color: white;
+        font-family: 'Source Han Serif SC', serif;
+        font-size: 16px;
+        font-weight: 700;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        box-shadow: 0 4px 14px rgba(255,102,0,0.3);
+        transition: all 0.3s;
+    }
+    .login-btn:hover { background: #FF8533; }
+    .login-btn:active { transform: scale(0.98); }
+    .fingerprint-btn-container {
+        margin-top: 32px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+    }
+    .fingerprint-btn {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transition: transform 0.3s;
+    }
+    .fingerprint-btn:hover { transform: scale(1.05); }
+    .fingerprint-btn .material-symbols-outlined { color: #FF6600; font-size: 24px; }
+    .fingerprint-label {
+        font-family: 'Source Han Serif SC', serif;
+        font-size: 12px;
+        font-weight: 300;
+        color: #3D2008;
+    }
+    /* 指纹页样式 */
+    .fingerprint-page { display: none; }
+    .fp-header {
+        margin-top: 80px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        text-align: center;
+    }
+    .fp-h2 {
+        font-family: 'Source Han Serif SC', 'Times New Roman', serif;
+        font-size: 21px;
+        font-weight: 400;
+        color: #3D2008;
+    }
+    .fp-h1 {
+        font-family: 'Source Han Serif SC', 'Times New Roman', serif;
+        font-size: 42px;
+        font-weight: 700;
+        color: #3D2008;
+        letter-spacing: -0.5px;
+    }
+    .fp-section {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        gap: 32px;
+    }
+    .fp-fingerprint-wrapper {
+        position: relative;
+        cursor: pointer;
+    }
+    .fp-fingerprint-glow {
+        position: absolute;
+        inset: 0;
+        background: rgba(211,47,47,0.2);
+        border-radius: 50%;
+        filter: blur(20px);
+    }
+    .fp-fingerprint-inner {
+        position: relative;
+        width: 96px;
+        height: 96px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.95);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    }
+    .fp-fingerprint-inner .material-symbols-outlined { color: #D32F2F; font-size: 56px; }
+    .fp-text {
+        font-family: 'Source Han Serif SC', serif;
+        font-size: 14px;
+        font-weight: 400;
+        color: rgba(61,32,8,0.8);
+        text-align: center;
+        max-width: 250px;
+    }
+    .fp-footer {
+        padding-bottom: calc(48px + env(safe-area-inset-bottom));
+    }
+    .fp-back-btn {
+        font-family: 'Source Han Serif SC', serif;
+        font-size: 14px;
+        font-weight: 400;
+        color: #3D2008;
+        background: none;
+        border: 1px solid #3D2008;
+        border-radius: 20px;
+        cursor: pointer;
+        padding: 10px 28px;
+    }
+</style>
 </head>
-<body class="bg-[#fff8f6]">
-    <!-- 启动画面 -->
-    <div id="splash" class="fixed inset-0 z-50 flex flex-col justify-between items-center bg-[#fff8f6]">
-        <div class="flex-1"></div>
-        <div class="flex flex-col items-center space-y-4">
-            <h1 class="font-serif text-5xl font-bold text-[#261814] tracking-widest">万物</h1>
-            <h2 class="text-xl text-[#594139] opacity-90">Everything</h2>
-        </div>
-        <div class="flex-1"></div>
-        <p class="pb-12 text-xs text-[#594139] opacity-70 tracking-widest">万物皆资产 · 惠及你我他</p>
-    </div>
-
-    <!-- 持久视频背景 -->
-    <video id="bgVideo" autoplay loop muted playsinline class="fixed inset-0 w-full h-full object-cover z-[-2]" poster="">
+<body>
+    <video id="bgVideo" class="video-bg" autoplay loop muted playsinline preload="auto">
         <source src="bg-video.mp4" type="video/mp4">
     </video>
-    <!-- 视频遮罩层 -->
-    <div id="videoOverlay" class="fixed inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/50 z-[-1]"></div>
+    <img id="poster" class="poster-bg" src="video-poster.png" alt="">
+    <div class="white-overlay"></div>
 
-    <!-- 页面容器 -->
-    <div id="page-container" class="hidden min-h-screen pb-24"></div>
-
-    <!-- 底部导航 -->
-    <nav id="bottomNav" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-md rounded-[32px] z-50 bg-[#0A0A0A] shadow-lg">
-        <div class="flex justify-around items-center h-16">
-            <button onclick="loadPage('home')" class="nav-btn flex flex-col items-center text-stone-400 py-2 px-6">
-                <span class="material-symbols-outlined">token</span>
-                <span class="text-[10px] font-medium uppercase tracking-wider mt-1">资产</span>
-            </button>
-            <button onclick="loadPage('data')" class="nav-btn flex flex-col items-center text-stone-400 py-2 px-6">
-                <span class="material-symbols-outlined">analytics</span>
-                <span class="text-[10px] font-medium uppercase tracking-wider mt-1">数据</span>
-            </button>
-            <button onclick="loadPage('profile')" class="nav-btn flex flex-col items-center text-stone-400 py-2 px-6">
-                <span class="material-symbols-outlined">person</span>
-                <span class="text-[10px] font-medium uppercase tracking-wider mt-1">我的</span>
-            </button>
+    <!-- 启动页 -->
+    <div id="splashPage" class="content">
+        <div class="title-group">
+            <h1 class="title">万物</h1>
+            <h2 class="subtitle">Everything</h2>
         </div>
-    </nav>
+        <p class="slogan">万物皆资产 · 惠及你我他</p>
+    </div>
+
+    <!-- 登录页 -->
+    <div id="loginPage" class="login-page">
+        <div class="login-header">
+            <h2 class="login-h2">欢迎回到</h2>
+            <h1 class="login-h1">万物</h1>
+        </div>
+        <div class="login-form">
+            <div class="input-wrapper">
+                <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24"><path fill="#3D2008" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                <input class="login-input" type="text" placeholder="用户名">
+            </div>
+            <div class="input-wrapper">
+                <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24"><path fill="#3D2008" d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                <input class="login-input" type="password" placeholder="密码">
+                <button class="password-toggle" type="button">
+                    <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#3D2008" d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/></svg>
+                </button>
+            </div>
+        </div>
+        <p class="login-hint">注册账号、忘记密码都可联系管理员哦</p>
+        <button class="login-btn" onclick="goToHome()">立即登录</button>
+        <div class="fingerprint-btn-container">
+            <button class="fingerprint-btn" onclick="goToFingerprint()">
+                <svg width="24" height="24" viewBox="0 0 24 24"><path fill="#FF6600" d="M17.81 4.47c-.08 0-.16-.02-.23-.06C15.66 3.42 14 3 12.01 3c-1.98 0-3.86.47-5.57 1.41-.24.13-.54.04-.68-.2-.13-.24-.04-.55.2-.68C7.82 2.52 9.86 2 12.01 2c2.13 0 3.99.47 6.03 1.52.25.13.34.43.21.67-.09.18-.26.28-.44.28zM3.5 9.72c-.1 0-.2-.03-.29-.09-.23-.16-.28-.47-.12-.7.99-1.4 2.25-2.5 3.75-3.27C9.98 4.04 14 4.03 17.15 5.65c1.5.77 2.76 1.86 3.75 3.25.16.22.11.54-.12.7-.23.16-.54.11-.7-.12-.9-1.26-2.04-2.25-3.39-2.94-2.87-1.47-6.54-1.47-9.4.01-1.36.7-2.5 1.7-3.4 2.96-.08.14-.23.21-.39.21zm6.25 12.07c-.13 0-.26-.05-.35-.15-.87-.87-1.34-1.43-2.01-2.64-.69-1.23-1.05-2.73-1.05-4.34 0-2.97 2.54-5.39 5.66-5.39s5.66 2.42 5.66 5.39c0 .28-.22.5-.5.5s-.5-.22-.5-.5c0-2.42-2.09-4.39-4.66-4.39-2.57 0-4.66 1.97-4.66 4.39 0 1.44.32 2.77.93 3.85.64 1.15 1.08 1.64 1.85 2.42.19.2.19.51 0 .71-.11.1-.24.15-.37.15zm7.17-1.85c-1.19 0-2.24-.3-3.1-.89-1.49-1.01-2.38-2.65-2.38-4.39 0-.28.22-.5.5-.5s.5.22.5.5c0 1.41.72 2.74 1.94 3.56.71.48 1.54.71 2.54.71.24 0 .64-.03 1.04-.1.27-.05.53.13.58.41.05.27-.13.53-.41.58-.57.11-1.07.12-1.21.12zM14.91 22c-.04 0-.09-.01-.14-.02-1.59-.44-2.63-1.03-3.72-2.1-1.4-1.39-2.17-3.24-2.17-5.22 0-1.62 1.38-2.94 3.08-2.94 1.7 0 3.08 1.32 3.08 2.94 0 1.07.93 1.94 2.08 1.94s2.08-.87 2.08-1.94c0-3.77-3.25-6.83-7.25-6.83-2.84 0-5.44 1.58-6.61 4.03-.39.81-.59 1.76-.59 2.8 0 .78.07 2.01.67 3.61.1.25-.03.54-.29.64-.26.1-.55-.04-.64-.29-.49-1.31-.73-2.61-.73-3.96 0-1.2.23-2.29.68-3.24 1.33-2.79 4.28-4.6 7.51-4.6 4.55 0 8.25 3.51 8.25 7.83 0 1.62-1.38 2.94-3.08 2.94s-3.08-1.32-3.08-2.94c0-1.07-.93-1.94-2.08-1.94s-2.08.87-2.08 1.94c0 1.71.66 3.31 1.87 4.51.95.94 1.86 1.46 3.27 1.85.27.07.42.35.35.61-.05.23-.26.38-.47.38z"/></svg>
+            </button>
+            <span class="fingerprint-label">指纹识别登录</span>
+        </div>
+    </div>
+
+    <!-- 指纹页 -->
+    <div id="fingerprintPage" class="fingerprint-page">
+        <header class="fp-header">
+            <h2 class="fp-h2">欢迎回到</h2>
+            <h1 class="fp-h1">万物</h1>
+        </header>
+        <section class="fp-section">
+            <div class="fp-fingerprint-wrapper" onclick="goToHome()">
+                <div class="fp-fingerprint-glow"></div>
+                <div class="fp-fingerprint-inner">
+                    <svg width="56" height="56" viewBox="0 0 24 24"><path fill="#D32F2F" d="M17.81 4.47c-.08 0-.16-.02-.23-.06C15.66 3.42 14 3 12.01 3c-1.98 0-3.86.47-5.57 1.41-.24.13-.54.04-.68-.2-.13-.24-.04-.55.2-.68C7.82 2.52 9.86 2 12.01 2c2.13 0 3.99.47 6.03 1.52.25.13.34.43.21.67-.09.18-.26.28-.44.28zM3.5 9.72c-.1 0-.2-.03-.29-.09-.23-.16-.28-.47-.12-.7.99-1.4 2.25-2.5 3.75-3.27C9.98 4.04 14 4.03 17.15 5.65c1.5.77 2.76 1.86 3.75 3.25.16.22.11.54-.12.7-.23.16-.54.11-.7-.12-.9-1.26-2.04-2.25-3.39-2.94-2.87-1.47-6.54-1.47-9.4.01-1.36.7-2.5 1.7-3.4 2.96-.08.14-.23.21-.39.21zm6.25 12.07c-.13 0-.26-.05-.35-.15-.87-.87-1.34-1.43-2.01-2.64-.69-1.23-1.05-2.73-1.05-4.34 0-2.97 2.54-5.39 5.66-5.39s5.66 2.42 5.66 5.39c0 .28-.22.5-.5.5s-.5-.22-.5-.5c0-2.42-2.09-4.39-4.66-4.39-2.57 0-4.66 1.97-4.66 4.39 0 1.44.32 2.77.93 3.85.64 1.15 1.08 1.64 1.85 2.42.19.2.19.51 0 .71-.11.1-.24.15-.37.15zm7.17-1.85c-1.19 0-2.24-.3-3.1-.89-1.49-1.01-2.38-2.65-2.38-4.39 0-.28.22-.5.5-.5s.5.22.5.5c0 1.41.72 2.74 1.94 3.56.71.48 1.54.71 2.54.71.24 0 .64-.03 1.04-.1.27-.05.53.13.58.41.05.27-.13.53-.41.58-.57.11-1.07.12-1.21.12zM14.91 22c-.04 0-.09-.01-.14-.02-1.59-.44-2.63-1.03-3.72-2.1-1.4-1.39-2.17-3.24-2.17-5.22 0-1.62 1.38-2.94 3.08-2.94 1.7 0 3.08 1.32 3.08 2.94 0 1.07.93 1.94 2.08 1.94s2.08-.87 2.08-1.94c0-3.77-3.25-6.83-7.25-6.83-2.84 0-5.44 1.58-6.61 4.03-.39.81-.59 1.76-.59 2.8 0 .78.07 2.01.67 3.61.1.25-.03.54-.29.64-.26.1-.55-.04-.64-.29-.49-1.31-.73-2.61-.73-3.96 0-1.2.23-2.29.68-3.24 1.33-2.79 4.28-4.6 7.51-4.6 4.55 0 8.25 3.51 8.25 7.83 0 1.62-1.38 2.94-3.08 2.94s-3.08-1.32-3.08-2.94c0-1.07-.93-1.94-2.08-1.94s-2.08.87-2.08 1.94c0 1.71.66 3.31 1.87 4.51.95.94 1.86 1.46 3.27 1.85.27.07.42.35.35.61-.05.23-.26.38-.47.38z"/></svg>
+                </div>
+            </div>
+            <p class="fp-text">请验证指纹以登录</p>
+        </section>
+        <footer class="fp-footer">
+            <button class="fp-back-btn" onclick="goToLogin()">用户名密码登录</button>
+        </footer>
+    </div>
 
     <script>
-        const pages = {
-            'login': 'android/code.html',
-            'home': '_6/code.html',
-            'assetDetail': '_5/code.html',
-            'profile': '_3/code.html',
-            'data': '_4/code.html'
+        const video = document.getElementById('bgVideo');
+        const poster = document.getElementById('poster');
+        const splashPage = document.getElementById('splashPage');
+        const loginPage = document.getElementById('loginPage');
+        const fingerprintPage = document.getElementById('fingerprintPage');
+
+        // 隐藏 poster 当视频开始播放
+        video.addEventListener('playing', () => { poster.style.display = 'none'; });
+        video.addEventListener('loadeddata', () => { poster.style.display = 'none'; });
+        video.addEventListener('canplay', () => { poster.style.display = 'none'; });
+
+        // 页面导航函数
+        function hideAllPages() {
+            splashPage.style.display = 'none';
+            loginPage.style.display = 'none';
+            fingerprintPage.style.display = 'none';
+        }
+
+        function goToLogin() {
+            hideAllPages();
+            loginPage.style.display = 'flex';
+        }
+
+        function goToFingerprint() {
+            hideAllPages();
+            fingerprintPage.style.display = 'flex';
+        }
+
+        function goToHome() {
+            hideAllPages();
+            // 创建 iframe 加载首页
+            const iframe = document.createElement('iframe');
+            iframe.src = 'home.html';
+            iframe.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;border:none;z-index:4;';
+            iframe.id = 'homeFrame';
+            document.body.appendChild(iframe);
+            video.pause();
+            window.showBottomNav && window.showBottomNav();
+        }
+
+        // 暴露给外部的接口
+        window.loadPage = function(pageName) {
+            switch(pageName) {
+                case 'login': goToLogin(); break;
+                case 'fingerprint': goToFingerprint(); break;
+                case 'home': goToHome(); break;
+            }
         };
 
-        function updateNav(page) {
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('bg-[#FF6B35]', 'text-white');
-                btn.classList.add('text-stone-400');
-            });
-            const active = document.querySelector(`[onclick="loadPage('${page}')"]`);
-            if (active) {
-                active.classList.add('bg-[#FF6B35]', 'text-white');
-                active.classList.remove('text-stone-400');
-            }
-        }
+        window.showBottomNav = function() {};
 
-        async function loadPage(name) {
-            const path = pages[name];
-            if (!path) return;
-            try {
-                const res = await fetch(path);
-                const html = await res.text();
-                document.getElementById('page-container').innerHTML = html;
-                document.title = html.match(/<title>(.*?)<\/title>/i)?.[1] || '万物';
-            } catch (e) { console.error(e); }
-            updateNav(name);
-        }
-
-        // 启动
-        setTimeout(() => {
-            document.getElementById('splash').style.opacity = '0';
-            document.getElementById('splash').style.transition = 'opacity 0.8s';
-            setTimeout(() => {
-                document.getElementById('splash').style.display = 'none';
-                document.getElementById('page-container').classList.remove('hidden');
-                document.getElementById('bottomNav').classList.remove('hidden');
-                loadPage('home');
-            }, 800);
-        }, 2000);
-
-        window.loadPage = loadPage;
+        // 3秒后自动跳转到登录页
+        setTimeout(() => { goToLogin(); }, 3000);
     </script>
 </body>
 </html>

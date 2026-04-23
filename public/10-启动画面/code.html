@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport">
+<title>万物启动画面</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600;700&display=swap');
+    html, body { width: 100%; height: 100%; overflow: hidden; }
+    body { position: fixed; inset: 0; background: #000; }
+    .video-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 0;
+    }
+    .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.3);
+        z-index: 1;
+    }
+    .content {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .title-group {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .title {
+        font-family: 'Noto Serif SC', serif;
+        font-size: 64px;
+        font-weight: 700;
+        color: #FFFFFF;
+        letter-spacing: 0;
+        line-height: 1.3;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+    .subtitle {
+        font-family: 'Noto Serif SC', serif;
+        font-size: 24px;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 0.9);
+        letter-spacing: 0.08em;
+        margin-top: 16px;
+    }
+    .slogan {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        padding-bottom: 48px;
+        font-family: 'Noto Serif SC', serif;
+        font-size: 14px;
+        font-weight: 300;
+        color: rgba(255, 255, 255, 0.7);
+        letter-spacing: 0.1em;
+    }
+</style>
+</head>
+<body>
+    <video class="video-bg" autoplay loop muted playsinline>
+        <source src="bg-video.mp4" type="video/mp4">
+    </video>
+    <div class="overlay"></div>
+    <div class="content">
+        <div class="title-group">
+            <h1 class="title">万物</h1>
+            <h2 class="subtitle">Everything</h2>
+        </div>
+        <p class="slogan">万物皆资产 · 惠及你我他</p>
+    </div>
+</body>
+</html>

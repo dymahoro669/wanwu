@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>安全验证</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { min-height: 100vh; background: linear-gradient(to bottom, #F5E6D3, #FAF7F0); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; overflow: hidden; position: relative; }
+    .material-symbols-outlined { font-family: 'Material Symbols Outlined'; font-weight: normal; font-style: normal; font-size: 24px; line-height: 1; letter-spacing: normal; text-transform: none; display: inline-block; white-space: nowrap; word-wrap: normal; direction: ltr; -webkit-font-feature-settings: 'liga'; -webkit-font-smoothing: antialiased; }
+    .serif { font-family: 'Noto Serif SC', 'Source Han Serif CN', 'STSongti SC', 'SimSun', serif; }
+    .bg-img { position: absolute; inset: 0; width: 100%; height: 100%; object-cover; }
+    .bg-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(255,248,246,0.4), rgba(255,248,246,0.8), rgba(255,248,246,1)); backdrop-filter: blur(2px); }
+    header { position: relative; z-index: 10; display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; }
+    .back-btn { padding: 8px; border-radius: 50%; color: #ab3500; cursor: pointer; }
+    h1 { font-size: 18px; color: #261814; font-weight: 600; }
+    .placeholder { width: 32px; }
+    main { position: relative; z-index: 10; flex: 1; padding: 48px 24px 128px; display: flex; flex-direction: column; align-items: center; max-width: 448px; margin: 0 auto; width: 100%; }
+    .brand { font-size: 40px; color: #ff6b35; font-style: italic; opacity: 0.8; margin-bottom: 48px; }
+    h2 { font-size: 40px; color: #261814; font-weight: 700; margin-bottom: 16px; }
+    .desc { font-size: 18px; color: #594139; max-width: 320px; text-align: center; margin-bottom: 48px; line-height: 1.6; }
+    form { width: 100%; display: flex; flex-direction: column; gap: 16px; }
+    .input-wrap { position: relative; }
+    input { width: 100%; padding: 16px; background: rgba(255,255,255,0.8); backdrop-filter: blur(4px); border: 1px solid #e1bfb5; border-radius: 16px; font-size: 16px; color: #261814; outline: none; box-shadow: 0 2px 8px rgba(0,0,0,0.05); font-family: inherit; }
+    input::placeholder { color: #594139; }
+    input:focus { border-color: #8d7168; }
+    .input-wrap .material-symbols-outlined { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: #8d7168; }
+    .pwd-wrap input { padding-right: 48px; }
+    .pwd-toggle { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: #8d7168; cursor: pointer; }
+    .submit-btn { width: 100%; padding: 16px; background: #ff6b35; color: white; border: none; border-radius: 9999px; font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; box-shadow: 0 4px 14px rgba(255,107,53,0.3); cursor: pointer; transition: all 0.3s; margin-top: 32px; }
+    .submit-btn:hover { opacity: 0.9; }
+    .submit-btn:active { transform: scale(0.98); }
+    .modal { position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(38,24,20,0.4); backdrop-filter: blur(4px); }
+    .modal-content { background: #ffffff; width: 100%; max-width: 320px; border-radius: 32px; padding: 32px; display: flex; flex-direction: column; align-items: center; text-align: center; box-shadow: 0 8px 32px rgba(109,91,70,0.2); animation: popIn 0.3s ease-out; }
+    @keyframes popIn { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+    .modal-icon { width: 64px; height: 64px; border-radius: 50%; background: #fff1ed; display: flex; align-items: center; justify-content: center; margin-bottom: 24px; }
+    .modal-icon .material-symbols-outlined { font-size: 32px; color: #ff6b35; }
+    .modal h3 { font-size: 24px; color: #261814; font-weight: 700; margin-bottom: 8px; }
+    .modal p { font-size: 16px; color: #594139; margin-bottom: 32px; }
+    .cancel-btn { font-size: 12px; color: #8d7168; border: 1px solid rgba(141,113,104,0.3); border-radius: 9999px; padding: 12px 32px; background: none; cursor: pointer; text-transform: uppercase; letter-spacing: 0.1em; }
+    .cancel-btn:hover { color: #261814; }
+</style>
+</head>
+<body>
+<img class="bg-img" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqVRPyxaQTkKNDKKaFCqRgvoBk6PZU4cSbqozmS7FLaEqTVUTT2ABf9JmUIbYFblVmp9k8H8EzbMTTJH_7MGyYyMJ9_0fbmia9vC1Lw036u5r-ksUEJOP5H_mu3yeSAeURVJSiqv7wxNA7IKT_evcLAOdVP23KQhn3bG4Ow1eKPAYpEbmZaHOFprQlTtGleovr2ODZellj2EzOWsqVPZoN8o7IVVtIoHm35ImEH4kFoWnv5-MkWw-OyS66YIciIWfF4HAU-5PKgMQ" alt=""/>
+<div class="bg-overlay"></div>
+<header>
+<button class="back-btn"><span class="material-symbols-outlined">arrow_back</span></button>
+<h1 class="serif">安全中心</h1>
+<div class="placeholder"></div>
+</header>
+<main>
+<div class="brand serif">万物</div>
+<h2 class="serif">开启指纹登录</h2>
+<p class="serif">请通过您的账户密码验证身份，以开启指纹快捷登录。</p>
+<form>
+<div class="input-wrap">
+<input placeholder="用户名 / 邮箱" type="text"/>
+<span class="material-symbols-outlined">person</span>
+</div>
+<div class="input-wrap pwd-wrap">
+<input placeholder="密码" type="password"/>
+<div class="pwd-toggle"><span class="material-symbols-outlined" style="font-size: 20px;">visibility</span></div>
+</div>
+</form>
+<button class="submit-btn" onclick="navigateTo('fingerprint')">验证并开启</button>
+</main>
+<div class="modal" id="modal">
+<div class="modal-content">
+<div class="modal-icon"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">fingerprint</span></div>
+<h3 class="serif">验证指纹</h3>
+<p>请触摸指纹传感器以继续</p>
+<button class="cancel-btn" onclick="closeModal()">取消</button>
+</div>
+</div>
+<script>
+function navigateTo(page) { window.location.href = page + '.html'; }
+function closeModal() { document.getElementById('modal').style.display = 'none'; }
+</script>
+</body>
+</html>

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>个人中心 - 万物</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+svg { display: inline-block; vertical-align: middle; }
+.serif { font-family: 'Noto Serif SC', 'Source Han Serif CN', 'STSongti SC', 'SimSun', serif; }
+.sans { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Manrope', sans-serif; }
+
+:root {
+  --primary: #ab3500;
+  --primary-container: #ff6b35;
+  --on-primary: #ffffff;
+  --on-primary-container: #5f1900;
+  --secondary: #6d5b46;
+  --surface-container: #ffe9e3;
+  --surface-container-lowest: #ffffff;
+  --surface-container-low: #fff1ed;
+  --surface-container-high: #fde3db;
+  --surface-dim: #eed5cd;
+  --background: #fff8f6;
+  --on-background: #261814;
+  --on-surface: #261814;
+  --on-surface-variant: #594139;
+  --outline: #8d7168;
+  --outline-variant: #e1bfb5;
+  --tertiary: #00677e;
+  --tertiary-fixed: #b5ebff;
+  --secondary-fixed-dim: #dbc3a8;
+  --secondary-fixed: #f8dec3;
+}
+
+body { min-height: max(884px, 100dvh); background: var(--background); font-family: -apple-system, BlinkMacSystemFont, sans-serif; padding-bottom: 128px; color: var(--on-surface); }
+
+header { position: sticky; top: 0; display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; background: #fffef9; border-bottom: 1px solid rgba(225,191,181,0.5); z-index: 40; }
+.header-btn { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background-color 0.15s; }
+.header-btn:hover { background: rgba(0,0,0,0.05); }
+.header-btn svg { width: 20px; height: 20px; fill: var(--on-surface); }
+.header-title { font-size: 18px; font-weight: 600; color: var(--on-surface); font-family: 'Noto Serif SC', serif; }
+
+main { max-width: 448px; margin: 0 auto; padding: 24px 24px; display: flex; flex-direction: column; gap: 32px; }
+
+.section-title { font-size: 18px; font-weight: 600; color: var(--on-surface); margin-bottom: 16px; font-family: 'Noto Serif SC', serif; }
+
+/* User Profile Card */
+.profile-card { background: var(--surface-container-lowest); border-radius: 8px; padding: 24px; box-shadow: 0 4px 20px rgba(109,91,70,0.08); border: 1px solid rgba(225,191,181,0.3); }
+.profile-header { display: flex; gap: 16px; margin-bottom: 16px; }
+.profile-avatar { width: 80px; height: 80px; border-radius: 8px; object-fit: cover; border: 2px solid var(--surface-container); }
+.profile-info { flex: 1; }
+.profile-name-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.profile-name { font-size: 24px; font-weight: 600; color: var(--on-surface); font-family: 'Noto Serif SC', serif; }
+.profile-dept { font-size: 10px; padding: 2px 6px; background: var(--surface-container); color: var(--on-surface-variant); border-radius: 4px; }
+.profile-role { font-size: 12px; padding: 2px 8px; background: var(--primary-container); color: var(--on-primary); border-radius: 9999px; font-weight: 600; margin-left: auto; }
+
+/* Level Progress */
+.level-section { margin-top: 12px; }
+.level-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.level-icon { width: 16px; height: 16px; fill: var(--primary-container); }
+.level-current { font-size: 12px; font-weight: 600; color: var(--on-surface-variant); }
+.level-next { font-size: 12px; font-weight: 600; color: var(--on-surface-variant); margin-left: auto; }
+.level-bar { width: 100%; height: 8px; background: var(--surface-container-high); border-radius: 9999px; overflow: hidden; }
+.level-fill { height: 100%; background: var(--primary-container); border-radius: 9999px; width: 52.5%; }
+.level-labels { display: flex; justify-content: space-between; font-size: 12px; color: var(--on-surface-variant); margin-top: 4px; }
+.level-percent { font-size: 12px; color: var(--primary-container); font-weight: 600; }
+
+/* Activity Feed */
+.activity-feed { margin-top: 12px; background: var(--surface-container); border-radius: 4px; padding: 8px; overflow: hidden; height: 32px; }
+.activity-track { display: flex; flex-direction: column; animation: scroll 10s linear infinite; width: 100%; }
+.activity-item { height: 32px; display: flex; align-items: center; justify-content: space-between; padding: 0 8px; font-size: 10px; color: var(--on-surface-variant); opacity: 0.8; flex-shrink: 0; }
+.activity-item span:first-child { flex: 1; }
+.activity-item span:nth-child(2) { margin-right: 8px; }
+.activity-item .points { color: var(--primary-container); font-weight: 600; }
+@keyframes scroll { 0% { transform: translateY(0); } 100% { transform: translateY(-50%); } }
+
+/* Benefits Card */
+.benefits-card { background: var(--surface-container-lowest); border-radius: 8px; padding: 16px; margin-top: 16px; border: 1px solid var(--surface-container-highest); }
+.benefits-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.benefits-title { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--on-surface); }
+.benefits-title svg { width: 18px; height: 18px; fill: var(--primary-container); }
+.benefits-link { font-size: 12px; color: var(--primary-container); display: flex; align-items: center; gap: 2px; cursor: pointer; }
+.benefits-link svg { width: 14px; height: 14px; fill: var(--primary-container); }
+.benefits-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.benefit-item { background: var(--surface-container-lowest); padding: 8px; border-radius: 4px; border: 1px solid var(--surface-container); }
+.benefit-item.next { opacity: 0.8; }
+.benefit-label { font-size: 12px; color: var(--on-surface-variant); margin-bottom: 4px; }
+.benefit-value { font-size: 14px; font-weight: 500; color: var(--on-surface); }
+.benefit-value.highlight { color: var(--primary); }
+
+/* Stats Grid */
+.stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.stat-card { background: var(--surface-container-lowest); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; align-items: center; gap: 8px; box-shadow: 0 4px 20px rgba(109,91,70,0.08); border: 1px solid rgba(225,191,181,0.3); cursor: pointer; transition: background-color 0.2s; }
+.stat-card:hover { background: var(--surface-container-low); }
+.stat-icon { width: 32px; height: 32px; fill: var(--primary-container); }
+.stat-value { font-size: 20px; font-weight: 600; color: var(--on-surface); font-family: 'Noto Serif SC', serif; }
+.stat-label { font-size: 12px; color: var(--on-surface-variant); }
+
+/* Stats Grid 2 cols */
+.stats-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.stat-card-2 { background: var(--surface-container-lowest); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; align-items: center; gap: 8px; box-shadow: 0 4px 20px rgba(109,91,70,0.08); border: 1px solid rgba(225,191,181,0.3); cursor: pointer; transition: background-color 0.2s; }
+.stat-card-2:hover { background: var(--surface-container-low); }
+.stat-card-2 .stat-icon { width: 32px; height: 32px; fill: var(--primary-container); }
+.stat-card-2 .stat-value { font-size: 20px; font-weight: 600; color: var(--on-surface); font-family: 'Noto Serif SC', serif; }
+.stat-card-2 .stat-label { font-size: 12px; color: var(--on-surface-variant); }
+
+/* Services List */
+.services-card { background: var(--surface-container-lowest); border-radius: 8px; overflow: hidden; box-shadow: 0 4px 20px rgba(109,91,70,0.08); border: 1px solid rgba(225,191,181,0.3); }
+.services-title { font-size: 14px; font-weight: 600; color: var(--on-surface); padding: 16px; border-bottom: 1px solid var(--surface-container-high); font-family: 'Noto Serif SC', serif; }
+.service-item { display: flex; align-items: center; justify-content: space-between; padding: 16px; border-bottom: 1px solid var(--surface-container-high); cursor: pointer; transition: background-color 0.2s; }
+.service-item:last-child { border-bottom: none; }
+.service-item:hover { background: var(--surface-container-low); }
+.service-left { display: flex; align-items: center; gap: 12px; }
+.service-icon { width: 20px; height: 20px; fill: var(--on-surface-variant); }
+.service-name { font-size: 16px; color: var(--on-surface); }
+.service-arrow { width: 16px; height: 16px; fill: var(--on-surface-variant); }
+
+.bottom-nav { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 448px; background: var(--surface-container-lowest); border-radius: 32px; overflow: hidden; box-shadow: 0 8px 30px rgba(109,91,70,0.12); z-index: 100; }
+.nav-inner { display: flex; justify-content: space-around; align-items: center; height: 64px; padding: 0 8px; }
+.nav-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 64px; padding: 0 32px; border-radius: 9999px; cursor: pointer; transition: all 0.2s; background: transparent; border: none; color: var(--on-surface-variant); }
+.nav-btn.active { background: var(--primary-container); color: var(--on-primary); }
+.nav-btn:not(.active):hover { background: var(--surface-container-low); }
+.nav-btn:active { transform: scale(0.9); }
+.nav-btn svg { width: 24px; height: 24px; }
+.nav-btn span { font-size: 10px; font-weight: 600; margin-top: 4px; font-family: -apple-system, BlinkMacSystemFont, sans-serif; text-transform: uppercase; letter-spacing: 0.05em; }
+</style>
+</head>
+<body>
+<header>
+  <button class="header-btn">
+    <svg viewBox="0 0 24 24"><path d="M3 11h8V3H3v8zm2-6h4v4H5V5zm8-2v8h8V3h-8zm6 6h-4V5h4v4zM3 21h8v-8H3v8zm2-6h4v4H5v-4zm12-2h2v2h-2v-2zm0-6h2v2h-2V7zm-4 4h2v2h-2v-2zm0 4h2v2h-2v-2zm-4-4h2v2h-2v-2zm0 4h2v2h-2v-2z"/></svg>
+  </button>
+  <h1 class="header-title serif">个人中心</h1>
+  <button class="header-btn">
+    <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/></svg>
+  </button>
+</header>
+
+<main>
+  <!-- User Profile Section -->
+  <section>
+    <div class="profile-card">
+      <div class="profile-header">
+        <img class="profile-avatar" src="./images/avatar1.jpg" alt=""/>
+        <div class="profile-info">
+          <div class="profile-name-row">
+            <span class="profile-name">李明</span>
+            <span class="profile-dept">综合管理部</span>
+            <span class="profile-role">主管</span>
+          </div>
+          <div class="level-section">
+            <div class="level-row">
+              <svg class="level-icon" viewBox="0 0 24 24"><path d="M12 2L9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2z"/></svg>
+              <span class="level-current">Lv.5</span>
+              <span class="level-next">Lv.6</span>
+            </div>
+            <div class="level-bar">
+              <div class="level-fill"></div>
+            </div>
+            <div class="level-labels">
+              <span>1050 / 2000 影响力</span>
+              <span class="level-percent">52.5%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="activity-feed">
+        <div class="activity-track">
+          <div class="activity-item"><span>创建资产被租用</span><span>10分钟前</span><span class="points">+50</span></div>
+          <div class="activity-item"><span>收到感谢信</span><span>1小时前</span><span class="points">+20</span></div>
+          <div class="activity-item"><span>租用他人资产</span><span>昨天</span><span class="points">+10</span></div>
+          <div class="activity-item"><span>获得成就 [初露锋芒]</span><span>2天前</span><span class="points">+100</span></div>
+          <div class="activity-item"><span>资产收到好评</span><span>3天前</span><span class="points">+10</span></div>
+          <div class="activity-item"><span>创建资产被租用</span><span>10分钟前</span><span class="points">+50</span></div>
+        </div>
+      </div>
+      <div class="benefits-card">
+        <div class="benefits-header">
+          <div class="benefits-title">
+            <svg viewBox="0 0 24 24"><path d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 11 8.76l1-1.36 1 1.36L15.38 12 17 10.83 14.92 8H20v6z"/></svg>
+            等级权益
+          </div>
+          <span class="benefits-link">查看全部
+            <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+          </span>
+        </div>
+        <div class="benefits-grid">
+          <div class="benefit-item">
+            <div class="benefit-label">当前 (Lv.5)</div>
+            <div class="benefit-value">+5% 结算权重</div>
+          </div>
+          <div class="benefit-item next">
+            <div class="benefit-label">下一级 (Lv.6)</div>
+            <div class="benefit-value highlight">+10% 结算权重</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Statistics -->
+  <section>
+    <h3 class="section-title">核心数据</h3>
+    <div class="stats-grid">
+      <div class="stat-card" onclick="navigateTo('profile')">
+        <svg class="stat-icon" viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+        <span class="stat-value">12</span>
+        <span class="stat-label">我的资产</span>
+      </div>
+      <div class="stat-card" onclick="navigateTo('profile')">
+        <svg class="stat-icon" viewBox="0 0 24 24"><path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
+        <span class="stat-value">3</span>
+        <span class="stat-label">我的租用</span>
+      </div>
+      <div class="stat-card" onclick="navigateTo('profile')">
+        <svg class="stat-icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        <span class="stat-value">5</span>
+        <span class="stat-label">我的感谢信</span>
+      </div>
+      <div class="stat-card" onclick="navigateTo('profile')">
+        <svg class="stat-icon" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        <span class="stat-value">28</span>
+        <span class="stat-label">我的收藏</span>
+      </div>
+      <div class="stat-card" onclick="navigateTo('profile')">
+        <svg class="stat-icon" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+        <span class="stat-value">16</span>
+        <span class="stat-label">我的评价</span>
+      </div>
+      <div class="stat-card" onclick="navigateTo('profile')">
+        <svg class="stat-icon" viewBox="0 0 24 24"><path d="M12 2L9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2z"/></svg>
+        <span class="stat-value">8</span>
+        <span class="stat-label">我的成就</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services List -->
+  <section>
+    <div class="services-card">
+      <div class="services-title">服务入口</div>
+      <div class="service-item">
+        <div class="service-left">
+          <svg class="service-icon" viewBox="0 0 24 24"><path d="M19.5 3.5L18 2l-1.5 1.5L15 2l-1.5 1.5L12 2l-1.5 1.5L9 2 7.5 3.5 6 2v14H3v3c0 1.66 1.34 3 3 3h12c1.66 0 3-1.34 3-3V2l-1.5 1.5zm-.5 15c0 .55-.45 1-1 1H6c-.55 0-1-.45-1-1v-1h14v1zm0-3H8V7h11v5.5zM9 8h1v1H9V8zm2 0h1v1h-1V8zm2 0h1v1h-1V8z"/></svg>
+          <span class="service-name">账户与账单</span>
+        </div>
+        <svg class="service-arrow" viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+      </div>
+      <div class="service-item">
+        <div class="service-left">
+          <svg class="service-icon" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
+          <span class="service-name">资产创建指南</span>
+        </div>
+        <svg class="service-arrow" viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+      </div>
+      <div class="service-item">
+        <div class="service-left">
+          <svg class="service-icon" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.31.06-.63.06-.94 0-.31-.02-.63-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+          <span class="service-name">通知设置</span>
+        </div>
+        <svg class="service-arrow" viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+      </div>
+      <div class="service-item">
+        <div class="service-left">
+          <svg class="service-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg>
+          <span class="service-name">帮助与反馈</span>
+        </div>
+        <svg class="service-arrow" viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+      </div>
+    </div>
+  </section>
+</main>
+
+<nav class="bottom-nav">
+  <div class="nav-inner">
+    <button class="nav-btn" onclick="navigateTo('home')">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 6h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zM10 4h4v2h-4V4z"/></svg>
+      <span>资产</span>
+    </button>
+    <button class="nav-btn" onclick="navigateTo('data')">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+      <span>数据</span>
+    </button>
+    <button class="nav-btn active" onclick="navigateTo('profile')">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      <span>我的</span>
+    </button>
+  </div>
+</nav>
+<script>
+function navigateTo(page) { window.location.href = page + '.html'; }
+</script>
+</body>
+</html>

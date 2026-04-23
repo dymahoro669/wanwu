@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>万物</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { width: 100%; height: 100%; background: var(--background); overflow: hidden; }
+svg { display: inline-block; vertical-align: middle; }
+.serif { font-family: 'Noto Serif SC', 'Source Han Serif CN', 'STSongti SC', 'SimSun', serif; }
+.sans { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Manrope', sans-serif; }
+
+:root {
+  --primary: #ab3500;
+  --primary-container: #ff6b35;
+  --on-primary: #ffffff;
+  --on-primary-container: #5f1900;
+  --secondary: #6d5b46;
+  --surface-container: #ffe9e3;
+  --surface-container-lowest: #ffffff;
+  --surface-container-low: #fff1ed;
+  --surface-container-high: #fde3db;
+  --surface-dim: #eed5cd;
+  --background: #fff8f6;
+  --on-background: #261814;
+  --on-surface: #261814;
+  --on-surface-variant: #594139;
+  --outline: #8d7168;
+  --outline-variant: #e1bfb5;
+  --tertiary: #00677e;
+  --tertiary-fixed: #b5ebff;
+  --secondary-fixed-dim: #dbc3a8;
+  --secondary-fixed: #f8dec3;
+}
+
+/* App Container */
+.app-container { position: fixed; inset: 0; display: flex; flex-direction: column; }
+
+/* Pages Wrapper */
+.pages-wrapper { flex: 1; display: flex; overflow: hidden; position: relative; z-index: 1; }
+
+/* Each Page - only show one at a time */
+.page { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow-y: auto; -webkit-overflow-scrolling: touch; background: var(--background); display: none; }
+.page.active { display: block; }
+
+/* Home Page Header */
+.home-header { position: absolute; top: 0; left: 0; right: 0; display: flex; justify-content: space-between; align-items: center; padding: 32px 24px 16px; z-index: 40; max-width: 448px; margin: 0 auto; width: 100%; background: linear-gradient(to bottom, rgba(0,0,0,0.6), transparent); }
+.header-btn { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.2); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; color: white; cursor: pointer; transition: opacity 0.15s; }
+.header-btn:hover { opacity: 0.8; }
+.header-btn:active { transform: scale(0.95); }
+.header-btn svg { width: 22px; height: 22px; fill: white; }
+.header-title { font-size: 20px; font-weight: 700; color: white; position: absolute; left: 50%; transform: translateX(-50%); font-family: 'Noto Serif SC', serif; text-shadow: 0 2px 8px rgba(0,0,0,0.3); letter-spacing: -0.02em; }
+
+/* Normal Header for Data/Profile */
+.page-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; background: #fffef9; border-bottom: 1px solid rgba(225,191,181,0.5); position: sticky; top: 0; z-index: 40; }
+.page-header .header-btn svg { fill: var(--on-surface); }
+.page-header .header-title { position: static; transform: none; color: var(--on-surface); text-shadow: none; }
+
+/* Banner */
+.banner { position: relative; width: 100%; height: 55vh; min-height: 320px; }
+.banner-slides { position: absolute; inset: 0; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scroll-behavior: smooth; }
+.banner-slides::-webkit-scrollbar { display: none; }
+.banner-slide { flex-shrink: 0; width: 100%; height: 100%; scroll-snap-align: center; position: relative; }
+.banner-img { width: 100%; height: 100%; object-fit: cover; }
+.banner-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.2), rgba(255,248,246,1)); }
+.banner-content { position: absolute; bottom: 80px; left: 24px; right: 24px; }
+.banner-tag { display: inline-block; padding: 4px 8px; background: var(--primary); color: white; border-radius: 6px; font-size: 10px; font-weight: 600; margin-bottom: 8px; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+.banner-tag.tertiary { background: var(--tertiary); }
+.banner-title { font-size: 24px; font-weight: 600; color: white; margin-bottom: 4px; font-family: 'Noto Serif SC', serif; line-height: 1.3; text-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+.banner-desc { font-size: 14px; color: rgba(255,255,255,0.9); font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+
+/* Search Bar */
+.search-bar { position: absolute; bottom: 10px; left: 24px; right: 24px; z-index: 40; }
+.search-inner { position: relative; width: 100%; background: var(--surface-container-lowest); border-radius: 16px; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.12); border: 1px solid rgba(225,191,181,0.3); display: flex; align-items: center; }
+.search-icon { position: absolute; left: 16px; color: var(--on-surface-variant); }
+.search-icon svg { width: 20px; height: 20px; fill: var(--on-surface-variant); }
+.search-bar input { flex: 1; padding: 14px 16px 14px 48px; border: none; outline: none; font-size: 16px; background: transparent; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+.search-bar input::placeholder { color: rgba(89,65,57,0.6); }
+.search-btn { margin: 8px; padding: 10px 16px; background: var(--primary-container); color: white; border: none; border-radius: 12px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: -apple-system, BlinkMacSystemFont, sans-serif; white-space: nowrap; }
+
+/* Main Content */
+main { max-width: 448px; margin: 0 auto; padding: 24px; padding-top: 24px; display: flex; flex-direction: column; gap: 32px; padding-bottom: 100px; }
+
+.categories { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px; }
+.categories::-webkit-scrollbar { display: none; }
+.cat-btn { flex-shrink: 0; padding: 10px 20px; border-radius: 9999px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid var(--outline-variant); background: var(--surface-container); color: var(--on-surface-variant); font-family: -apple-system, BlinkMacSystemFont, sans-serif; transition: background-color 0.2s; }
+.cat-btn.active { background: var(--primary-container); color: var(--on-primary); border-color: var(--primary-container); box-shadow: 0 4px 12px rgba(171,53,0,0.15); }
+
+.section-title { font-size: 18px; font-weight: 600; color: var(--on-surface); margin-bottom: 16px; font-family: 'Noto Serif SC', serif; }
+
+.asset-grid { columns: 2; column-gap: 16px; }
+.asset-grid > * { break-inside: avoid; margin-bottom: 16px; }
+
+.featured-card { background: var(--surface-container-lowest); border-radius: 12px; overflow: hidden; box-shadow: 0 8px 24px rgba(109,91,70,0.06); border: 1px solid rgba(225,191,181,0.3); transition: box-shadow 0.3s; }
+.featured-img-wrap { position: relative; aspect-ratio: 16/9; }
+.featured-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+.featured-card:hover .featured-img { transform: scale(1.05); }
+.featured-badge { position: absolute; top: 16px; left: 16px; display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: var(--primary); color: white; border-radius: 8px; font-size: 12px; font-weight: 600; font-family: -apple-system, BlinkMacSystemFont, sans-serif; backdrop-filter: blur(8px); }
+.featured-badge svg { width: 16px; height: 16px; fill: white; }
+.featured-body { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.featured-title { font-size: 18px; font-weight: 600; color: var(--on-surface); font-family: 'Noto Serif SC', serif; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.featured-info { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--secondary); font-family: -apple-system, BlinkMacSystemFont, sans-serif; flex-wrap: wrap; }
+.featured-info img { width: 20px; height: 20px; border-radius: 50%; }
+.featured-info .star svg { width: 14px; height: 14px; fill: var(--primary); }
+.featured-info .divider { color: var(--outline-variant); }
+.featured-price { display: flex; align-items: center; justify-content: space-between; border-top: 1px solid rgba(225,191,181,0.3); padding-top: 12px; }
+.price-wrap { display: flex; flex-direction: column; gap: 4px; }
+.price { font-size: 20px; font-weight: 600; color: var(--primary); }
+.price-unit { font-size: 14px; font-weight: 400; color: var(--secondary); }
+.price-tag { font-size: 10px; padding: 2px 8px; background: var(--tertiary-fixed); color: var(--tertiary); border-radius: 6px; display: inline-block; }
+.card-btn { padding: 6px 14px; background: var(--primary); color: white; border: none; border-radius: 9999px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: -apple-system, BlinkMacSystemFont, sans-serif; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 8px rgba(171,53,0,0.2); white-space: nowrap; }
+.card-btn svg { width: 16px; height: 16px; fill: white; }
+
+.card { background: var(--surface-container-lowest); border-radius: 12px; overflow: hidden; box-shadow: 0 8px 24px rgba(109,91,70,0.06); border: 1px solid rgba(225,191,181,0.3); transition: box-shadow 0.3s; }
+.card:hover { box-shadow: 0 12px 32px rgba(109,91,70,0.12); }
+.card-img { width: 100%; aspect-ratio: 16/9; object-fit: cover; transition: transform 0.5s; }
+.card:hover .card-img { transform: scale(1.05); }
+.card-img.portrait { aspect-ratio: 3/4; }
+.card-body { padding: 12px; display: flex; flex-direction: column; gap: 6px; }
+.card-title { font-size: 14px; font-weight: 600; color: var(--on-surface); font-family: 'Noto Serif SC', serif; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.card-meta { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--secondary); font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+.card-meta svg { width: 12px; height: 12px; fill: var(--primary); }
+.card-owner { display: flex; align-items: center; gap: 4px; font-size: 10px; color: rgba(109,91,70,0.8); font-family: -apple-system, BlinkMacSystemFont, sans-serif; margin-top: 2px; }
+.card-owner img { width: 14px; height: 14px; border-radius: 50%; }
+.card-footer { padding: 10px 12px; border-top: 1px solid rgba(225,191,181,0.3); display: flex; justify-content: space-between; align-items: center; }
+.card-price-wrap { display: flex; flex-direction: column; gap: 2px; }
+.card-price { font-size: 14px; font-weight: 600; color: var(--primary); }
+.card-price-unit { font-size: 11px; font-weight: 400; color: var(--secondary); }
+.card-tag { font-size: 10px; padding: 2px 6px; background: var(--tertiary-fixed); color: var(--tertiary); border-radius: 4px; display: inline-block; }
+.card-btn-sm { padding: 6px 12px; background: var(--primary); color: white; border: none; border-radius: 9999px; font-size: 11px; font-weight: 600; cursor: pointer; font-family: -apple-system, BlinkMacSystemFont, sans-serif; box-shadow: 0 2px 8px rgba(171,53,0,0.2); white-space: nowrap; }
+
+.icon-card { position: relative; aspect-ratio: 3/4; background: linear-gradient(135deg, var(--secondary-fixed), var(--surface-container-high)); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.icon-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, var(--secondary-fixed-dim), var(--surface-container-high)); opacity: 0.8; }
+.icon-card svg { width: 48px; height: 48px; fill: var(--primary); opacity: 0.8; position: relative; z-index: 1; }
+.icon-card .card-body { position: absolute; bottom: 0; left: 0; right: 0; }
+
+.card-badge { position: absolute; bottom: 8px; right: 8px; background: rgba(255,255,255,0.8); color: var(--on-surface); padding: 4px 8px; border-radius: 9999px; font-size: 10px; font-weight: 600; display: flex; align-items: center; gap: 4px; font-family: -apple-system, BlinkMacSystemFont, sans-serif; backdrop-filter: blur(8px); }
+.card-badge svg { width: 12px; height: 12px; fill: var(--on-surface); }
+
+/* Data Page Styles */
+.section-gap { padding: 24px; padding-bottom: 100px; }
+
+.card-label { font-size: 11px; color: var(--on-surface-variant); margin-bottom: 8px; }
+.card-value { font-size: 24px; font-weight: 700; color: var(--primary); }
+
+.reward-card { background: linear-gradient(135deg, rgba(255,107,53,0.1), var(--surface-dim)); border-radius: 8px; padding: 16px; border: 1px solid rgba(225,191,181,0.3); }
+.reward-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.reward-label { font-size: 11px; color: var(--on-surface-variant); opacity: 0.7; }
+.reward-badge { font-size: 10px; padding: 2px 8px; background: var(--primary); color: white; border-radius: 9999px; font-weight: 600; }
+.reward-value { font-size: 32px; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
+.reward-value span { font-size: 18px; }
+.reward-unit { font-size: 14px; color: var(--on-surface-variant); margin-left: 8px; }
+.progress-bar { width: 100%; height: 6px; background: var(--surface-container-high); border-radius: 9999px; overflow: hidden; margin-top: 8px; }
+.progress-fill { height: 100%; background: var(--primary); border-radius: 9999px; }
+.progress-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--on-surface-variant); margin-top: 4px; }
+.reward-note { font-size: 11px; color: var(--on-surface-variant); opacity: 0.7; margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(225,191,181,0.3); }
+
+.stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.stat-card { background: var(--surface-container-lowest); border-radius: 8px; padding: 14px; box-shadow: 0 4px 20px rgba(109,91,70,0.08); border: 1px solid rgba(225,191,181,0.3); }
+.stat-label { font-size: 11px; color: var(--on-surface-variant); margin-bottom: 6px; }
+.stat-value { font-size: 20px; font-weight: 700; color: var(--on-surface); }
+.stat-value.primary { color: var(--primary-container); }
+
+.rank-tabs { display: flex; gap: 8px; margin-bottom: 12px; }
+.rank-tab { padding: 6px 14px; border-radius: 9999px; font-size: 12px; font-weight: 600; cursor: pointer; border: none; background: var(--surface-container); color: var(--on-surface-variant); }
+.rank-tab.active { background: var(--on-surface); color: white; }
+
+.rank-list { background: var(--surface-container-lowest); border-radius: 8px; overflow: hidden; box-shadow: 0 4px 20px rgba(109,91,70,0.08); border: 1px solid rgba(225,191,181,0.3); }
+.rank-header { display: flex; padding: 10px 14px; border-bottom: 1px solid rgba(225,191,181,0.3); }
+.rank-header-btn { flex: 1; text-align: center; font-size: 13px; font-weight: 600; padding: 12px 0; color: var(--primary-container); border-bottom: 2px solid var(--primary-container); background: var(--surface-container-low); }
+.rank-header-btn.inactive { color: var(--on-surface-variant); border-bottom: none; background: transparent; }
+
+.rank-item { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-bottom: 1px solid rgba(225,191,181,0.3); }
+.rank-item:last-child { border-bottom: none; }
+.rank-num { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; background: var(--surface-container); color: var(--primary-container); }
+.rank-num.second { background: var(--surface-container-high); color: var(--on-surface-variant); }
+.rank-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--surface-container); overflow: hidden; }
+.rank-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.rank-info { flex: 1; }
+.rank-name { font-size: 14px; font-weight: 600; color: var(--on-surface); }
+.rank-title { font-size: 11px; color: var(--on-surface-variant); }
+.rank-value { font-size: 14px; font-weight: 600; color: var(--on-surface); }
+.rank-value span { font-size: 11px; font-weight: 400; color: var(--on-surface-variant); }
+
+.achievement-card { background: linear-gradient(135deg, var(--secondary-fixed), var(--surface-container-high)); border-radius: 8px; padding: 16px; position: relative; overflow: hidden; border: 1px solid rgba(225,191,181,0.3); cursor: pointer; }
+.achievement-icon { position: absolute; right: -16px; top: -16px; opacity: 0.15; transform: rotate(12deg); }
+.achievement-icon svg { width: 100px; height: 100px; fill: var(--primary); }
+.achievement-content { position: relative; z-index: 1; }
+.achievement-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.achievement-header svg { width: 20px; height: 20px; fill: var(--primary-container); }
+.achievement-title { font-size: 16px; font-weight: 600; color: var(--on-surface); font-family: 'Noto Serif SC', serif; }
+.achievement-desc { font-size: 14px; color: var(--on-surface-variant); margin-bottom: 12px; }
+.achievement-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.6); padding: 4px 10px; border-radius: 9999px; border: 1px solid rgba(255,255,255,0.4); }
+.achievement-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--primary-container); animation: pulse 2s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+.achievement-badge-text { font-size: 11px; color: var(--on-surface); }
+
+.tags-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.tags-more { font-size: 12px; color: var(--primary-container); display: flex; align-items: center; gap: 2px; cursor: pointer; }
+.tags-more svg { width: 14px; height: 14px; fill: var(--primary-container); }
+.tags-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.tag-card { background: var(--surface-container-lowest); border-radius: 8px; padding: 10px; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 20px rgba(109,91,70,0.08); border: 1px solid rgba(225,191,181,0.3); cursor: pointer; transition: background-color 0.2s; }
+.tag-card:hover { background: var(--surface-container-low); }
+.tag-card svg { width: 18px; height: 18px; fill: var(--secondary); }
+.tag-name { font-size: 13px; color: var(--on-surface); }
+.tag-more { background: var(--surface-container-lowest); border-radius: 8px; padding: 10px; display: flex; align-items: center; justify-content: center; gap: 4px; box-shadow: 0 4px 20px rgba(109,91,70,0.08); border: 1px solid rgba(225,191,181,0.3); cursor: pointer; }
+.tag-more span { font-size: 13px; color: var(--on-surface-variant); }
+.tag-more svg { width: 14px; height: 14px; fill: var(--on-surface-variant); }
+
+/* Profile Page Styles */
+.profile-card { background: var(--surface-container-lowest); border-radius: 8px; padding: 16px; box-shadow: 0 4px 20px rgba(109,91,70,0.08); border: 1px solid rgba(225,191,181,0.3); }
+.profile-header { display: flex; gap: 12px; margin-bottom: 12px; align-items: center; }
+.profile-avatar { width: 64px; height: 64px; border-radius: 8px; object-fit: cover; border: 2px solid var(--surface-container); }
+.profile-info { flex: 1; }
+.profile-name-row { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; flex-wrap: wrap; }
+.profile-name { font-size: 20px; font-weight: 600; color: var(--on-surface); font-family: 'Noto Serif SC', serif; }
+.profile-dept { font-size: 10px; padding: 2px 6px; background: var(--surface-container); color: var(--on-surface-variant); border-radius: 4px; }
+.profile-role { font-size: 11px; padding: 2px 8px; background: var(--primary-container); color: var(--on-primary); border-radius: 9999px; font-weight: 600; }
+
+.level-section { margin-top: 10px; }
+.level-row { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+.level-icon { width: 14px; height: 14px; fill: var(--primary-container); }
+.level-current { font-size: 11px; font-weight: 600; color: var(--on-surface-variant); }
+.level-next { font-size: 11px; font-weight: 600; color: var(--on-surface-variant); margin-left: auto; }
+.level-bar { width: 100%; height: 6px; background: var(--surface-container-high); border-radius: 9999px; overflow: hidden; }
+.level-fill { height: 100%; background: var(--primary-container); border-radius: 9999px; width: 52.5%; }
+.level-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--on-surface-variant); margin-top: 4px; }
+.level-percent { font-size: 11px; color: var(--primary-container); font-weight: 600; }
+
+.activity-feed { margin-top: 10px; background: var(--surface-container); border-radius: 4px; padding: 0 6px; overflow: hidden; height: 28px; display: flex; align-items: center; }
+.activity-track { display: flex; flex-direction: column; animation: scroll 10s linear infinite; width: 100%; }
+.activity-item { height: 100%; display: flex; align-items: center; justify-content: space-between; padding: 0 6px; font-size: 10px; color: var(--on-surface-variant); opacity: 0.8; flex-shrink: 0; }
+.activity-item .points { color: var(--primary-container); font-weight: 600; }
+
+.benefits-card { background: var(--surface-container-lowest); border-radius: 8px; padding: 12px; margin-top: 12px; border: 1px solid var(--surface-container-highest); }
+.benefits-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.benefits-title { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--on-surface); }
+.benefits-title svg { width: 16px; height: 16px; fill: var(--primary-container); }
+.benefits-link { font-size: 11px; color: var(--primary-container); display: flex; align-items: center; gap: 2px; cursor: pointer; }
+.benefits-link svg { width: 12px; height: 12px; fill: var(--primary-container); }
+.benefits-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.benefit-item { background: var(--surface-container-lowest); padding: 8px; border-radius: 4px; border: 1px solid var(--surface-container); }
+.benefit-item.next { opacity: 0.8; }
+.benefit-label { font-size: 11px; color: var(--on-surface-variant); margin-bottom: 4px; }
+.benefit-value { font-size: 13px; font-weight: 500; color: var(--on-surface); }
+.benefit-value.highlight { color: var(--primary); }
+
+.profile-stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.profile-stat-card { background: var(--surface-container-lowest); border-radius: 8px; padding: 12px; display: flex; flex-direction: column; align-items: center; gap: 6px; box-shadow: 0 4px 20px rgba(109,91,70,0.08); border: 1px solid rgba(225,191,181,0.3); cursor: pointer; transition: background-color 0.2s; }
+.profile-stat-card:hover { background: var(--surface-container-low); }
+.profile-stat-icon { width: 28px; height: 28px; fill: var(--primary-container); }
+.profile-stat-value { font-size: 18px; font-weight: 600; color: var(--on-surface); font-family: 'Noto Serif SC', serif; }
+.profile-stat-label { font-size: 11px; color: var(--on-surface-variant); text-align: center; }
+
+.services-card { background: var(--surface-container-lowest); border-radius: 8px; overflow: hidden; box-shadow: 0 4px 20px rgba(109,91,70,0.08); border: 1px solid rgba(225,191,181,0.3); }
+.services-title { font-size: 14px; font-weight: 600; color: var(--on-surface); padding: 14px; border-bottom: 1px solid var(--surface-container-high); font-family: 'Noto Serif SC', serif; }
+.service-item { display: flex; align-items: center; justify-content: space-between; padding: 14px; border-bottom: 1px solid var(--surface-container-high); cursor: pointer; transition: background-color 0.2s; }
+.service-item:last-child { border-bottom: none; }
+.service-item:hover { background: var(--surface-container-low); }
+.service-left { display: flex; align-items: center; gap: 10px; }
+.service-icon { width: 18px; height: 18px; fill: var(--on-surface-variant); }
+.service-name { font-size: 14px; color: var(--on-surface); }
+.service-arrow { width: 14px; height: 14px; fill: var(--on-surface-variant); }
+
+/* Bottom Navigation */
+.bottom-nav { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 448px; background: var(--surface-container-lowest); border-radius: 32px; box-shadow: 0 8px 30px rgba(109,91,70,0.12); z-index: 100; }
+.nav-inner { display: flex; justify-content: space-around; align-items: center; width: 100%; height: 64px; padding: 0 8px; position: relative; box-sizing: border-box; }
+.nav-indicator { position: absolute; bottom: 8px; height: 48px; width: calc(33.333% - 16px); background: var(--primary-container); border-radius: 24px; transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: -1; }
+.nav-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 64px; width: 33.333%; cursor: pointer; background: transparent; border: none; color: var(--on-surface-variant); transition: color 0.2s; }
+.nav-btn.active { color: var(--on-primary); }
+.nav-btn svg { width: 24px; height: 24px; }
+.nav-btn span { font-size: 10px; font-weight: 600; margin-top: 2px; font-family: -apple-system, BlinkMacSystemFont, sans-serif; text-transform: uppercase; letter-spacing: 0.05em; }
+</style>
+</head>
+<body>
+<div class="app-container">
+  <div class="pages-wrapper">
+    <div class="pages-container" id="pagesContainer">
+      <!-- Page 1: Home (Assets) -->
+      <div class="page active" id="page-home">
+        <header class="home-header">
+          <button class="header-btn">
+            <svg viewBox="0 0 24 24"><path d="M3 11h8V3H3v8zm2-6h4v4H5V5zm8-2v8h8V3h-8zm6 6h-4V5h4v4zM3 21h8v-8H3v8zm2-6h4v4H5v-4zm12-2h2v2h-2v-2zm0-6h2v2h-2V7zm-4 4h2v2h-2v-2zm0 4h2v2h-2v-2zm-4-4h2v2h-2v-2zm0 4h2v2h-2v-2z"/></svg>
+          </button>
+          <h1 class="header-title serif">万物</h1>
+          <button class="header-btn">
+            <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/></svg>
+          </button>
+        </header>
+
+        <div class="banner">
+          <div class="banner-slides" id="bannerSlides">
+            <div class="banner-slide">
+              <img class="banner-img" src="./images/banner1.jpg" alt=""/>
+              <div class="banner-overlay"></div>
+              <div class="banner-content">
+                <span class="banner-tag">全新发布</span>
+                <h2 class="banner-title">2024 Q1 品牌设计规范</h2>
+                <p class="banner-desc">点击探索最新设计语言与资源库</p>
+              </div>
+            </div>
+            <div class="banner-slide">
+              <img class="banner-img" src="./images/banner2.jpg" alt=""/>
+              <div class="banner-overlay"></div>
+              <div class="banner-content">
+                <span class="banner-tag tertiary">限时特惠</span>
+                <h2 class="banner-title">高端会议空间体验周</h2>
+                <p class="banner-desc">A座302创意研讨室半价预订中</p>
+              </div>
+            </div>
+          </div>
+          <div class="search-bar">
+            <div class="search-inner">
+              <span class="search-icon">
+                <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+              </span>
+              <input placeholder="搜索资产、创建者或标签"/>
+              <button class="search-btn">搜索</button>
+            </div>
+          </div>
+        </div>
+
+        <main>
+          <div class="categories">
+            <button class="cat-btn active">全部</button>
+            <button class="cat-btn">办公工具</button>
+            <button class="cat-btn">专业文档</button>
+            <button class="cat-btn">场地租借</button>
+            <button class="cat-btn">技能标签</button>
+            <button class="cat-btn">摄影器材</button>
+          </div>
+
+          <section>
+            <h3 class="section-title">精选推荐</h3>
+            <div class="featured-card">
+              <div class="featured-img-wrap">
+                <img class="featured-img" src="./images/banner1.jpg" alt=""/>
+                <span class="featured-badge">
+                  <svg viewBox="0 0 24 24"><path d="M12 2L9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2z"/></svg>
+                  精选推荐
+                </span>
+              </div>
+              <div class="featured-body">
+                <div>
+                  <h4 class="featured-title">全套高级办公设备租赁计划</h4>
+                  <div class="featured-info">
+                    <img src="./images/avatar1.jpg" alt=""/>
+                    <span>陈主管</span>
+                    <span class="divider">•</span>
+                    <span class="star"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+                    <span>5.0 (128)</span>
+                    <span class="divider">•</span>
+                    <span>企业服务部</span>
+                  </div>
+                </div>
+                <div class="featured-price">
+                  <div class="price-wrap">
+                    <span class="price">¥299<span class="price-unit">/月起</span></span>
+                    <span class="price-tag">办公设备</span>
+                  </div>
+                  <button class="card-btn" onclick="navigateToDetail()">预约
+                    <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="asset-grid">
+            <div class="card">
+              <div style="position:relative;">
+                <img class="card-img" src="./images/macbook.jpg" alt=""/>
+              </div>
+              <div class="card-body">
+                <h4 class="card-title">MacBook Pro 16" M2 Max</h4>
+                <div class="card-meta"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><span>4.9 (12)</span></div>
+                <div class="card-owner"><img src="./images/avatar1.jpg" alt=""/><span>王技术</span><span>•</span><span>IT 部门</span></div>
+              </div>
+              <div class="card-footer">
+                <div class="card-price-wrap"><span class="card-price">¥50<span class="card-price-unit">/天</span></span><span class="card-tag">IT设备</span></div>
+                <button class="card-btn-sm" onclick="navigateToDetail()">预约</button>
+              </div>
+            </div>
+
+            <div class="card">
+              <div style="position:relative;">
+                <img class="card-img portrait" src="./images/design-doc.jpg" alt=""/>
+              </div>
+              <div class="card-body">
+                <h4 class="card-title">2024 Q1 品牌设计系统规范文档</h4>
+                <div class="card-meta"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><span>5.0 (45)</span></div>
+                <div class="card-owner"><img src="./images/avatar1.jpg" alt=""/><span>李设计</span><span>•</span><span>设计中心</span></div>
+              </div>
+              <div class="card-footer">
+                <div class="card-price-wrap"><span class="card-price">免费</span><span class="card-tag">设计资源</span></div>
+                <button class="card-btn-sm" onclick="navigateToDetail()">领取</button>
+              </div>
+            </div>
+
+            <div class="card">
+              <div style="position:relative;">
+                <img class="card-img" src="./images/meeting-room.jpg" alt=""/>
+                <div class="card-badge"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>12 人</div>
+              </div>
+              <div class="card-body">
+                <h4 class="card-title">A座 302 创意研讨室</h4>
+                <div class="card-meta"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><span>4.8 (89)</span></div>
+                <div class="card-owner"><img src="./images/avatar1.jpg" alt=""/><span>赵行政</span><span>•</span><span>行政部</span></div>
+              </div>
+              <div class="card-footer">
+                <div class="card-price-wrap"><span class="card-price">¥100<span class="card-price-unit">/小时</span></span><span class="card-tag">场地租借</span></div>
+                <button class="card-btn-sm" onclick="navigateToDetail()">预约</button>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="icon-card">
+                <svg viewBox="0 0 24 24"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>
+              </div>
+              <div class="card-body">
+                <h4 class="card-title">Python 数据分析入门辅导 (1对1)</h4>
+                <div class="card-owner"><img src="./images/avatar2.jpg" alt=""/><span>张工</span><span>•</span><span>数据组</span></div>
+              </div>
+              <div class="card-footer">
+                <div class="card-price-wrap"><span class="card-price">免费</span><span class="card-tag">技能交换</span></div>
+                <button class="card-btn-sm" onclick="navigateToDetail()">领取</button>
+              </div>
+            </div>
+
+            <div class="card">
+              <div style="position:relative;">
+                <img class="card-img" src="./images/sony-camera.jpg" alt=""/>
+              </div>
+              <div class="card-body">
+                <h4 class="card-title">Sony A7S III 全画幅微单</h4>
+                <div class="card-meta"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><span>4.9 (24)</span></div>
+                <div class="card-owner"><img src="./images/avatar1.jpg" alt=""/><span>刘摄影</span><span>•</span><span>影视部</span></div>
+              </div>
+              <div class="card-footer">
+                <div class="card-price-wrap"><span class="card-price">¥150<span class="card-price-unit">/天</span></span><span class="card-tag">摄影器材</span></div>
+                <button class="card-btn-sm" onclick="navigateToDetail()">预约</button>
+              </div>
+            </div>
+
+            <div class="card">
+              <div style="position:relative;">
+                <img class="card-img portrait" src="./images/marketing-doc.jpg" alt=""/>
+              </div>
+              <div class="card-body">
+                <h4 class="card-title">2024 Q2 市场营销策略模版</h4>
+                <div class="card-meta"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><span>4.7 (32)</span></div>
+                <div class="card-owner"><img src="./images/avatar1.jpg" alt=""/><span>吴市场</span><span>•</span><span>市场部</span></div>
+              </div>
+              <div class="card-footer">
+                <div class="card-price-wrap"><span class="card-price">免费</span><span class="card-tag">办公文档</span></div>
+                <button class="card-btn-sm" onclick="navigateToDetail()">领取</button>
+              </div>
+            </div>
+
+            <div class="card">
+              <div style="position:relative;">
+                <img class="card-img" src="./images/standing-desk.jpg" alt=""/>
+              </div>
+              <div class="card-body">
+                <h4 class="card-title">智能升降办公桌 (B区)</h4>
+                <div class="card-meta"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><span>4.6 (18)</span></div>
+                <div class="card-owner"><img src="./images/avatar1.jpg" alt=""/><span>周后勤</span><span>•</span><span>后勤部</span></div>
+              </div>
+              <div class="card-footer">
+                <div class="card-price-wrap"><span class="card-price">¥20<span class="card-price-unit">/天</span></span><span class="card-tag">办公家具</span></div>
+                <button class="card-btn-sm" onclick="navigateToDetail()">预约</button>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="icon-card">
+                <svg viewBox="0 0 24 24"><path d="M22 9V7h-2V5c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-2h2v-2h-2v-2h2v-2h-2V9h2zm-4 10H4V5h14v14zM6 13h5v4H6v-4zm6-6h4v3h-4V7zM6 7h5v5H6V7zm6 4h4v6h-4v-6z"/></svg>
+              </div>
+              <div class="card-body">
+                <h4 class="card-title">Figma 后台管理系统 UI Kit</h4>
+              </div>
+              <div class="card-footer">
+                <div class="card-price-wrap"><span class="card-price">免费</span><span class="card-tag">设计资源</span></div>
+                <button class="card-btn-sm" onclick="navigateToDetail()">领取</button>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+
+      <!-- Page 2: Data -->
+      <div class="page" id="page-data">
+        <header class="page-header">
+          <button class="header-btn">
+            <svg viewBox="0 0 24 24"><path d="M3 11h8V3H3v8zm2-6h4v4H5V5zm8-2v8h8V3h-8zm6 6h-4V5h4v4zM3 21h8v-8H3v8zm2-6h4v4H5v-4zm12-2h2v2h-2v-2zm0-6h2v2h-2V7zm-4 4h2v2h-2v-2zm0 4h2v2h-2v-2zm-4-4h2v2h-2v-2zm0 4h2v2h-2v-2z"/></svg>
+          </button>
+          <h1 class="header-title serif">数据中心</h1>
+          <button class="header-btn">
+            <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/></svg>
+          </button>
+        </header>
+
+        <main class="section-gap">
+          <section>
+            <h3 class="section-title">资产活跃奖励</h3>
+            <div class="reward-card">
+              <div class="reward-header">
+                <span class="reward-label">基于上月交易量计算</span>
+                <span class="reward-badge">本月生效</span>
+              </div>
+              <div class="reward-value">14.2<span>%</span><span class="reward-unit">收益加成</span></div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 71%"></div>
+              </div>
+              <div class="progress-labels">
+                <span>0%</span>
+                <span>最高目标: 20%</span>
+              </div>
+              <p class="reward-note">基于上月全公司资产成交额动态计算。本月活跃用户可按比例享受额外结算奖励，激励每一份资产的流转价值。</p>
+            </div>
+          </section>
+
+          <section>
+            <h3 class="section-title">公司看板</h3>
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="stat-label">今日成交金额</div>
+                <div class="stat-value primary">¥128,450</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">今日租用次数</div>
+                <div class="stat-value">342</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">活跃资产数量</div>
+                <div class="stat-value">1,024</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">在线用户数</div>
+                <div class="stat-value">8,901</div>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div class="tags-header">
+              <h3 class="section-title" style="margin-bottom:0">排行榜</h3>
+              <span class="tags-more">查看全部
+                <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+              </span>
+            </div>
+            <div class="rank-tabs">
+              <button class="rank-tab active">周</button>
+              <button class="rank-tab">月</button>
+              <button class="rank-tab">年</button>
+            </div>
+            <div class="rank-list">
+              <div class="rank-header">
+                <button class="rank-header-btn">贡献榜</button>
+                <button class="rank-header-btn inactive">活跃榜</button>
+                <button class="rank-header-btn inactive">财富榜</button>
+              </div>
+              <div class="rank-item">
+                <div class="rank-num">1</div>
+                <div class="rank-avatar"><img src="./images/avatar1.jpg" alt=""/></div>
+                <div class="rank-info">
+                  <div class="rank-name">赵千影</div>
+                  <div class="rank-title">数字艺术家</div>
+                </div>
+                <div class="rank-value">9,850 <span>件</span></div>
+              </div>
+              <div class="rank-item">
+                <div class="rank-num second">2</div>
+                <div class="rank-avatar"><img src="./images/avatar2.jpg" alt=""/></div>
+                <div class="rank-info">
+                  <div class="rank-name">李星辰</div>
+                  <div class="rank-title">硬件极客</div>
+                </div>
+                <div class="rank-value">8,420 <span>件</span></div>
+              </div>
+              <div class="rank-item">
+                <div class="rank-num second">3</div>
+                <div class="rank-avatar"><img src="./images/avatar1.jpg" alt=""/></div>
+                <div class="rank-info">
+                  <div class="rank-name">王晓悦</div>
+                  <div class="rank-title">空间设计师</div>
+                </div>
+                <div class="rank-value">7,100 <span>件</span></div>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div class="achievement-card">
+              <div class="achievement-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 2L9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2z"/></svg>
+              </div>
+              <div class="achievement-content">
+                <div class="achievement-header">
+                  <svg viewBox="0 0 24 24"><path d="M12 2L9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2z"/></svg>
+                  <h3 class="achievement-title">成就大厅</h3>
+                </div>
+                <p class="achievement-desc">探索里程碑，解锁专属徽章与权益</p>
+                <div class="achievement-badge">
+                  <span class="achievement-badge-dot"></span>
+                  <span class="achievement-badge-text">最新：赵千影 解锁「万物宗师」</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div class="tags-header">
+              <h3 class="section-title" style="margin-bottom:0">标签市场</h3>
+              <span class="tags-more">进入市场
+                <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+              </span>
+            </div>
+            <div class="tags-grid">
+              <div class="tag-card">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                <span class="tag-name">视觉设计</span>
+              </div>
+              <div class="tag-card">
+                <svg viewBox="0 0 24 24"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>
+                <span class="tag-name">全栈开发</span>
+              </div>
+              <div class="tag-card">
+                <svg viewBox="0 0 24 24"><path d="M12 12m-3.2 0a3.2 3.2 0 1 0 6.4 0a3.2 3.2 0 1 0 -6.4 0"/><path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/></svg>
+                <span class="tag-name">商业摄影</span>
+              </div>
+              <div class="tag-card">
+                <svg viewBox="0 0 24 24"><path d="M12 2L9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2z"/></svg>
+                <span class="tag-name">法务咨询</span>
+              </div>
+              <div class="tag-card">
+                <svg viewBox="0 0 24 24"><path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/></svg>
+                <span class="tag-name">多语翻译</span>
+              </div>
+              <div class="tag-more">
+                <span>更多标签</span>
+                <svg viewBox="0 0 24 24"><path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+
+      <!-- Page 3: Profile -->
+      <div class="page" id="page-profile">
+        <header class="page-header">
+          <button class="header-btn">
+            <svg viewBox="0 0 24 24"><path d="M3 11h8V3H3v8zm2-6h4v4H5V5zm8-2v8h8V3h-8zm6 6h-4V5h4v4zM3 21h8v-8H3v8zm2-6h4v4H5v-4zm12-2h2v2h-2v-2zm0-6h2v2h-2V7zm-4 4h2v2h-2v-2zm0 4h2v2h-2v-2zm-4-4h2v2h-2v-2zm0 4h2v2h-2v-2z"/></svg>
+          </button>
+          <h1 class="header-title serif">个人中心</h1>
+          <button class="header-btn">
+            <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/></svg>
+          </button>
+        </header>
+
+        <main class="section-gap">
+          <section>
+            <div class="profile-card">
+              <div class="profile-header">
+                <img class="profile-avatar" src="./images/avatar1.jpg" alt=""/>
+                <div class="profile-info">
+                  <div class="profile-name-row">
+                    <span class="profile-name">李明</span>
+                    <span class="profile-dept">综合管理部</span>
+                    <span class="profile-role">主管</span>
+                  </div>
+                  <div class="level-section">
+                    <div class="level-row">
+                      <svg class="level-icon" viewBox="0 0 24 24"><path d="M12 2L9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2z"/></svg>
+                      <span class="level-current">Lv.5</span>
+                      <span class="level-next">Lv.6</span>
+                    </div>
+                    <div class="level-bar">
+                      <div class="level-fill"></div>
+                    </div>
+                    <div class="level-labels">
+                      <span>1050 / 2000 影响力</span>
+                      <span class="level-percent">52.5%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="activity-feed">
+                <div class="activity-track">
+                  <div class="activity-item"><span>创建资产被租用</span><span>10分钟前</span><span class="points">+50</span></div>
+                  <div class="activity-item"><span>收到感谢信</span><span>1小时前</span><span class="points">+20</span></div>
+                  <div class="activity-item"><span>租用他人资产</span><span>昨天</span><span class="points">+10</span></div>
+                  <div class="activity-item"><span>获得成就 [初露锋芒]</span><span>2天前</span><span class="points">+100</span></div>
+                  <div class="activity-item"><span>资产收到好评</span><span>3天前</span><span class="points">+10</span></div>
+                  <div class="activity-item"><span>创建资产被租用</span><span>10分钟前</span><span class="points">+50</span></div>
+                </div>
+              </div>
+              <div class="benefits-card">
+                <div class="benefits-header">
+                  <div class="benefits-title">
+                    <svg viewBox="0 0 24 24"><path d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2z"/></svg>
+                    等级权益
+                  </div>
+                  <span class="benefits-link">查看全部
+                    <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+                  </span>
+                </div>
+                <div class="benefits-grid">
+                  <div class="benefit-item">
+                    <div class="benefit-label">当前 (Lv.5)</div>
+                    <div class="benefit-value">+5% 结算权重</div>
+                  </div>
+                  <div class="benefit-item next">
+                    <div class="benefit-label">下一级 (Lv.6)</div>
+                    <div class="benefit-value highlight">+10% 结算权重</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h3 class="section-title">核心数据</h3>
+            <div class="profile-stats-grid">
+              <div class="profile-stat-card">
+                <svg class="profile-stat-icon" viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9z"/></svg>
+                <span class="profile-stat-value">12</span>
+                <span class="profile-stat-label">我的资产</span>
+              </div>
+              <div class="profile-stat-card">
+                <svg class="profile-stat-icon" viewBox="0 0 24 24"><path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
+                <span class="profile-stat-value">3</span>
+                <span class="profile-stat-label">我的租用</span>
+              </div>
+              <div class="profile-stat-card">
+                <svg class="profile-stat-icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                <span class="profile-stat-value">5</span>
+                <span class="profile-stat-label">我的感谢信</span>
+              </div>
+              <div class="profile-stat-card">
+                <svg class="profile-stat-icon" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                <span class="profile-stat-value">28</span>
+                <span class="profile-stat-label">我的收藏</span>
+              </div>
+              <div class="profile-stat-card">
+                <svg class="profile-stat-icon" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                <span class="profile-stat-value">16</span>
+                <span class="profile-stat-label">我的评价</span>
+              </div>
+              <div class="profile-stat-card">
+                <svg class="profile-stat-icon" viewBox="0 0 24 24"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2z"/></svg>
+                <span class="profile-stat-value">8</span>
+                <span class="profile-stat-label">我的成就</span>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div class="services-card">
+              <div class="services-title">服务入口</div>
+              <div class="service-item">
+                <div class="service-left">
+                  <svg class="service-icon" viewBox="0 0 24 24"><path d="M19.5 3.5L18 2l-1.5 1.5L15 2l-1.5 1.5L12 2l-1.5 1.5L9 2 7.5 3.5 6 2v14H3v3c0 1.66 1.34 3 3 3h12c1.66 0 3-1.34 3-3V2l-1.5 1.5z"/></svg>
+                  <span class="service-name">账户与账单</span>
+                </div>
+                <svg class="service-arrow" viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+              </div>
+              <div class="service-item">
+                <div class="service-left">
+                  <svg class="service-icon" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
+                  <span class="service-name">资产创建指南</span>
+                </div>
+                <svg class="service-arrow" viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+              </div>
+              <div class="service-item">
+                <div class="service-left">
+                  <svg class="service-icon" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.31.06-.63.06-.94 0-.31-.02-.63-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58z"/></svg>
+                  <span class="service-name">通知设置</span>
+                </div>
+                <svg class="service-arrow" viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+              </div>
+              <div class="service-item">
+                <div class="service-left">
+                  <svg class="service-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg>
+                  <span class="service-name">帮助与反馈</span>
+                </div>
+                <svg class="service-arrow" viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <div class="nav-inner">
+      <div class="nav-indicator" id="navIndicator"></div>
+      <button class="nav-btn active" data-tab="home" onclick="switchTab('home')">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 6h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zM10 4h4v2h-4V4z"/></svg>
+        <span>资产</span>
+      </button>
+      <button class="nav-btn" data-tab="data" onclick="switchTab('data')">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+        <span>数据</span>
+      </button>
+      <button class="nav-btn" data-tab="profile" onclick="switchTab('profile')">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        <span>我的</span>
+      </button>
+    </div>
+  </nav>
+</div>
+
+<script>
+let currentTab = 'home';
+let currentBanner = 0;
+const bannerSlides = document.getElementById('bannerSlides');
+const totalBanners = 2;
+let bannerInterval;
+
+// 自动轮播
+function autoSlide() {
+  currentBanner = (currentBanner + 1) % totalBanners;
+  bannerSlides.scrollTo({ left: currentBanner * bannerSlides.offsetWidth, behavior: 'smooth' });
+}
+
+// 启动自动轮播
+function startBannerAutoSlide() {
+  bannerInterval = setInterval(autoSlide, 5000);
+}
+
+// 页面可见性变化时暂停/恢复轮播
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    clearInterval(bannerInterval);
+  } else {
+    startBannerAutoSlide();
+  }
+});
+
+// 启动自动轮播
+startBannerAutoSlide();
+
+function updateIndicator(tab) {
+  const indicator = document.getElementById('navIndicator');
+  const targetBtn = document.querySelector(`.nav-btn[data-tab="${tab}"]`);
+  const navInner = document.querySelector('.nav-inner');
+
+  if (!targetBtn || !navInner) return;
+
+  // Get actual position and width of the button
+  const btnRect = targetBtn.getBoundingClientRect();
+  const navRect = navInner.getBoundingClientRect();
+
+  // Calculate left position relative to nav-inner
+  const left = btnRect.left - navRect.left;
+  const width = btnRect.width;
+
+  indicator.style.left = left + 'px';
+  indicator.style.width = width + 'px';
+}
+
+function switchTab(tab) {
+  if (tab === currentTab) return;
+
+  // Hide all pages
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  // Show selected page
+  document.getElementById('page-' + tab).classList.add('active');
+
+  // Update indicator position based on actual button position
+  updateIndicator(tab);
+
+  // Update button states
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.classList.remove('active');
+    if (btn.dataset.tab === tab) {
+      btn.classList.add('active');
+    }
+  });
+
+  currentTab = tab;
+}
+
+function navigateToDetail() {
+  window.location.href = 'assetDetail.html';
+}
+
+// Initialize indicator position when page loads
+window.addEventListener('load', () => {
+  updateIndicator('home');
+});
+</script>
+</body>
+</html>

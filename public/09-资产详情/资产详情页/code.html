@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&amp;family=Manrope:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "inverse-on-surface": "#ffede8",
+                    "surface-container-highest": "#f7ddd5",
+                    "secondary-fixed-dim": "#dbc3a8",
+                    "on-surface": "#261814",
+                    "error": "#ba1a1a",
+                    "primary-fixed-dim": "#ffb59d",
+                    "tertiary-fixed": "#b5ebff",
+                    "on-tertiary": "#ffffff",
+                    "on-primary-container": "#5f1900",
+                    "on-tertiary-fixed-variant": "#004e60",
+                    "inverse-primary": "#ffb59d",
+                    "secondary": "#6d5b46",
+                    "tertiary-fixed-dim": "#59d5fb",
+                    "outline": "#8d7168",
+                    "on-surface-variant": "#594139",
+                    "on-background": "#261814",
+                    "on-secondary": "#ffffff",
+                    "surface-tint": "#ab3500",
+                    "primary": "#ab3500",
+                    "on-secondary-container": "#74614b",
+                    "on-primary": "#ffffff",
+                    "tertiary-container": "#00a7cb",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-high": "#fde3db",
+                    "on-tertiary-container": "#003744",
+                    "on-primary-fixed": "#390c00",
+                    "surface-container": "#ffe9e3",
+                    "primary-fixed": "#ffdbd0",
+                    "secondary-fixed": "#f8dec3",
+                    "surface-container-low": "#fff1ed",
+                    "surface": "#fff8f6",
+                    "primary-container": "#ff6b35",
+                    "on-primary-fixed-variant": "#832600",
+                    "surface-variant": "#f7ddd5",
+                    "inverse-surface": "#3c2d28",
+                    "surface-bright": "#fff8f6",
+                    "on-error": "#ffffff",
+                    "surface-dim": "#eed5cd",
+                    "outline-variant": "#e1bfb5",
+                    "on-secondary-fixed-variant": "#544430",
+                    "error-container": "#ffdad6",
+                    "secondary-container": "#f8dec3",
+                    "on-tertiary-fixed": "#001f28",
+                    "on-secondary-fixed": "#261908",
+                    "on-error-container": "#93000a",
+                    "tertiary": "#00677e",
+                    "background": "#fff8f6"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "16px",
+                    "unit": "8px",
+                    "container-padding": "24px",
+                    "section-gap": "48px"
+            },
+            "fontFamily": {
+                    "label-sm": ["Manrope", "system-ui"],
+                    "headline-md": ["Noto Serif SC", "serif"],
+                    "body-lg": ["Manrope", "system-ui"],
+                    "display-lg": ["Noto Serif SC", "serif"],
+                    "body-md": ["Manrope", "system-ui"]
+            },
+            "fontSize": {
+                    "label-sm": ["12px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "display-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { background-color: #fff8f6; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        body { min-height: max(884px, 100dvh); }
+    </style>
+</head>
+<body class="font-body-md text-on-surface">
+<!-- Top Navigation -->
+<header class="fixed top-0 left-0 right-0 z-50 flex justify-between items-center px-6 py-4 w-full bg-gradient-to-b from-black/40 to-transparent">
+<button class="backdrop-blur-md transition-colors duration-200 rounded-full w-10 h-10 flex items-center justify-center bg-black/40 hover:bg-black/60">
+<span class="material-symbols-outlined text-white">arrow_back</span>
+</button>
+<button class="backdrop-blur-md transition-colors duration-200 rounded-full w-10 h-10 flex items-center justify-center bg-black/40 hover:bg-black/60">
+<span class="material-symbols-outlined text-white">share</span>
+</button>
+</header>
+<main class="pb-32">
+<!-- Hero Section -->
+<section class="relative h-[480px] w-full overflow-hidden">
+<img alt="Herman Miller 办公套件" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB75X6ayuO8JPb0y5LcLKcqEaGfTnj3t197fr_e6DIPS-KNHuYdXUg_mcpqcrNXQ-lTCpv99haPdBJtINJjcpKzVsPLogliherP9DEpzGwdYqozbG1lWvz95JzkhiCUJhL54LBSO7XKCh_Esv9_N5YbeS-ubv5l5jK9Ln74U3Wg9IA_kMNUx-m7arWvdafIhsZGEUUfW03eu6rmqC_42brHKHDq9LJencW8Kbje5e3yN3-x6klMsY0jiWleo5ub5VSlfI7fUWMSaRo"/>
+<div class="absolute inset-0 bg-gradient-to-t from-[#fff8f6] via-transparent to-transparent opacity-60"></div>
+</section>
+<!-- Content Shell -->
+<div class="px-gutter -mt-12 relative z-10 space-y-8">
+<!-- Asset Header Card -->
+<div class="bg-surface-container-lowest p-8 rounded-lg shadow-2xl shadow-stone-900/5">
+<div class="flex flex-col sm:flex-row justify-between items-start gap-4 mb-4">
+<div class="flex-1">
+<div class="flex flex-wrap gap-2 mb-2">
+<span class="px-2 py-0.5 bg-surface-container text-on-surface-variant text-[10px] font-bold rounded uppercase tracking-wider">符合人体工程学</span>
+<span class="px-2 py-0.5 bg-surface-container text-on-surface-variant text-[10px] font-bold rounded uppercase tracking-wider">设计师款</span>
+</div>
+<h2 class="font-display-lg text-2xl md:text-3xl text-on-surface leading-tight">Herman Miller 办公套件</h2>
+<div class="flex items-center gap-2 mt-1">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-sm text-on-surface">4.9</span>
+<span class="font-label-sm text-on-surface-variant/60 text-xs ml-0.5">(128 条评价)</span>
+</div>
+<div class="w-1 h-1 rounded-full bg-outline-variant/50 mx-1"></div>
+<div class="flex items-center gap-1.5">
+<span class="font-label-sm text-xs text-on-surface-variant/60">商品编号: HM-6629</span>
+<button class="flex items-center justify-center text-on-surface-variant/40 hover:text-primary transition-colors" title="复制编号">
+<span class="material-symbols-outlined text-sm">content_copy</span>
+</button>
+</div>
+</div>
+</div>
+<div class="sm:text-right">
+<p class="text-primary font-display-lg text-3xl leading-none font-bold">¥299</p>
+<p class="font-label-sm text-on-surface-variant uppercase tracking-widest mt-1">每月租金</p>
+</div>
+</div>
+<div class="border-t border-outline-variant/30 mt-8 pt-8 flex items-center gap-4">
+<img alt="主理人" class="w-12 h-12 rounded-full object-cover grayscale-[0.2]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDukmzZ_DrSzDQCKRrcyue5rI2SSjLlOm5y-zNfH06W3KlxZ2H8K3I-bDc6uN_GBQXk0qkfywE3-9ePaYBSLT2vNYPWLOrFrOvy7aiwE1JUp4_zFKO746EA1uBcACBI4Ln9lzJhOgCEbmbSilUyLT4O8iF2eN2wSuLx0QvbkPkdE8o3BaRYAwcuR7duvjb1k2M_Xh9GKQLZFdhSCwUwNvm1Tdop4pxDLDYxwA_S8C1Hp5CLOYdk3PDzFzz4q9o5mzJICl7Tba2dNIE"/>
+<div>
+<p class="font-label-sm text-on-surface-variant uppercase tracking-wider text-[10px]">主理人</p>
+<p class="font-headline-md text-base text-on-surface">亚历山大·范斯</p>
+</div>
+<button class="ml-auto text-primary px-4 py-2 rounded-full border border-primary/20 font-label-sm hover:bg-primary/5 transition-colors text-xs">
+                        查看资料
+                    </button>
+</div>
+</div>
+<!-- Appointment Calendar Section -->
+<section class="bg-surface-container-low rounded-lg p-6">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-headline-md text-xl text-on-surface">可预约日历</h3>
+<div class="flex gap-1">
+<button class="p-1.5 rounded-full bg-white/80 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-lg">chevron_left</span>
+</button>
+<button class="p-1.5 rounded-full bg-white/80 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-lg">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Date Picker -->
+<div class="grid grid-cols-7 gap-1 mb-8">
+<div class="aspect-[4/5] bg-primary text-white rounded-lg flex flex-col items-center justify-center shadow-lg shadow-primary/20">
+<span class="text-[10px] opacity-80 font-bold">24</span>
+<span class="text-[9px] font-medium">四</span>
+</div>
+<div class="aspect-[4/5] bg-white/60 text-on-surface rounded-lg flex flex-col items-center justify-center border border-outline-variant/10">
+<span class="text-[10px] font-bold">25</span>
+<span class="text-[9px] opacity-60">五</span>
+</div>
+<div class="aspect-[4/5] bg-white/60 text-on-surface rounded-lg flex flex-col items-center justify-center border border-outline-variant/10">
+<span class="text-[10px] font-bold">26</span>
+<span class="text-[9px] opacity-60">六</span>
+</div>
+<div class="aspect-[4/5] bg-white/60 text-on-surface rounded-lg flex flex-col items-center justify-center border border-outline-variant/10">
+<span class="text-[10px] font-bold">27</span>
+<span class="text-[9px] opacity-60 text-error">日</span>
+</div>
+<div class="aspect-[4/5] bg-white/60 text-on-surface rounded-lg flex flex-col items-center justify-center border border-outline-variant/10">
+<span class="text-[10px] font-bold">28</span>
+<span class="text-[9px] opacity-60">一</span>
+</div>
+<div class="aspect-[4/5] bg-white/60 text-on-surface rounded-lg flex flex-col items-center justify-center border border-outline-variant/10">
+<span class="text-[10px] font-bold">29</span>
+<span class="text-[9px] opacity-60">二</span>
+</div>
+<div class="aspect-[4/5] bg-white/60 text-on-surface rounded-lg flex flex-col items-center justify-center border border-outline-variant/10">
+<span class="text-[10px] font-bold">30</span>
+<span class="text-[9px] opacity-60">三</span>
+</div>
+</div>
+<!-- Time Grid -->
+<div class="grid grid-cols-3 gap-2">
+<button class="py-2.5 rounded-lg border border-outline-variant/30 bg-white/50 text-on-surface font-label-sm hover:border-primary/50 text-[10px]">09:00</button>
+<button class="py-2.5 rounded-lg border-2 border-primary bg-primary/5 text-primary font-bold text-[10px]">09:30</button>
+<button class="py-2.5 rounded-lg border border-outline-variant/30 bg-white/50 text-on-surface font-label-sm text-[10px]">10:00</button>
+<button class="py-2.5 rounded-lg border border-outline-variant/30 bg-white/50 text-on-surface font-label-sm text-[10px]">10:30</button>
+<button class="py-2.5 rounded-lg border border-outline-variant/30 bg-white/50 text-on-surface font-label-sm text-[10px]">11:00</button>
+<button class="py-2.5 rounded-lg border border-outline-variant/30 bg-white/50 text-on-surface font-label-sm opacity-50 cursor-not-allowed text-[10px]">11:30</button>
+<button class="py-2.5 rounded-lg border border-outline-variant/30 bg-white/50 text-on-surface font-label-sm text-[10px]">14:00</button>
+<button class="py-2.5 rounded-lg border border-outline-variant/30 bg-white/50 text-on-surface font-label-sm text-[10px]">14:30</button>
+<button class="py-2.5 rounded-lg border border-outline-variant/30 bg-white/50 text-on-surface font-label-sm text-[10px]">15:00</button>
+</div>
+</section>
+<!-- Asset Introduction -->
+<section class="bg-surface-container-low border border-outline-variant/10 rounded-lg p-8 text-center space-y-4">
+<h3 class="font-headline-md text-xl text-on-surface">现代主义传承</h3>
+<p class="font-body-md text-base text-on-surface-variant leading-relaxed">
+                    体验人体工程学设计与世纪中期美学的巅峰结合。这套精选方案包含经典的 Aeron 办公椅、Eames 办公桌以及集成理线系统，是打造高效创意环境的理想之选。
+                </p>
+</section>
+<!-- User Reviews -->
+<section class="space-y-8">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-md text-xl text-on-surface">用户评价</h3>
+<span class="text-primary font-label-sm cursor-pointer text-xs">查看全部 128 条</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="p-6 rounded-lg border border-white/40 bg-white">
+<div class="flex items-center gap-3 mb-4">
+<img alt="用户" class="w-10 h-10 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMapRNXStvG3ytrxPz3PaN4qXY_DPuE4qDLU_ca-0MfoxHIsq3wFE8gv_f6oeIyPcGozC0DgvVtUWpmZ7n9aXh2NKKzHYI2Hr9GVF7SLb71l7kHFiZu9w2-eNTTX0HonLCLaeEGlDcOAkOPd6u7ooRD1FBc8b-rqtYVe6Fcz6-AB3HZccgXcsM49m336hriRHw2IPhj9Wz0ZVLgiFvql2XKO-ZVlRychm2g66gYjE9A6tUrUGR8laZbBankmPnrN3xOTriAdOaBcE"/>
+<div>
+<p class="font-headline-md text-base">埃琳娜·罗西</p>
+<div class="flex text-primary text-[10px]">
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+</div>
+<p class="font-body-md text-sm text-on-surface-variant italic leading-relaxed">“家具状态保持得非常完美。它把我的家庭工作室变成了一个专业的避风港。这种人体工学支持绝对值得投资。”</p>
+</div>
+<div class="p-6 rounded-lg border border-white/40 bg-white">
+<div class="flex items-center gap-3 mb-4">
+<img alt="用户" class="w-10 h-10 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-LL6I1NZNKb6Zf5t8ysn7diGXeUhdjY7ptOS-o9mDSMoHpH1ceUtTKhixkR1r4Pgj4OtSoy7oqaliEoZYo2sco8tHotwEB6r4ceybUfIximjvdDuUUqaCvsVgsJ0MnBCTtT9KjpCefgzWYDcbO4NkmF2nryMFbiQm_gJihe5SR_gEIA9K891bpBdgtcqkNHhsY0SXqQ-tkC4NKfXQ0WgshHxfQvwHq9wm3wL8NU3EQ-HkoMYJCn9gdOZOLCCamBG1Z1-9hAYzP5w"/>
+<div>
+<p class="font-headline-md text-base">陈马库斯</p>
+<div class="flex text-primary text-[10px]">
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 0;">star</span>
+</div>
+</div>
+</div>
+<p class="font-body-md text-sm text-on-surface-variant italic leading-relaxed">“配送和安装都非常顺利。套件与描述完全一致。虽然预约时稍微有点延迟，但整体体验是一流的。”</p>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Sticky Bottom Bar -->
+<nav class="fixed bottom-6 w-[calc(100%-48px)] max-w-md mx-auto left-1/2 -translate-x-1/2 z-50 flex justify-between items-center p-2 bg-[#0A0A0A] rounded-full shadow-2xl shadow-stone-900/40">
+<button class="flex flex-col items-center justify-center text-stone-400 px-8 py-3 hover:text-white transition-all">
+<span class="material-symbols-outlined">chat_bubble</span>
+<span class="font-headline-md text-[10px] uppercase tracking-widest mt-1">咨询</span>
+</button>
+<button class="flex flex-1 items-center justify-center gap-2 bg-[#FF6B35] text-white rounded-full py-4 px-6 active:scale-95 duration-150 ease-in-out ml-2">
+<span class="material-symbols-outlined text-sm">calendar_today</span>
+<span class="font-headline-md text-sm uppercase tracking-widest">立即预约</span>
+</button>
+</nav>
+</body></html>
